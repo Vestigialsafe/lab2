@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Crear Usuario</title>
+    <link rel="stylesheet" th:href="@{/css/layoutStyle.css}">
+    <link rel="stylesheet" th:href="@{/css/usuarioStyle.css}">
+</head>
+<body>
+<div class="layout">
+    <!-- Sidebar -->
+    <div th:replace="layout/layout :: sidebar"></div>
+
+    <!-- Main Section -->
+    <div class="main-section">
+        <!-- Header -->
+        <div th:replace="layout/layout :: header"></div>
+
+        <!-- Contenido principal -->
+        <main class="content">
+            <div class="form-box">
+                <h2 class="text-center mb-4">Registrar nuevo usuario</h2>
+
+                <form th:action="@{/usuarios}" method="post" th:object="${usuario}"
+                      class="bg-white p-4 rounded shadow-sm">
+                    <div class="mb-3">
+                        <label for="nombre" class="form-label">Nombre</label>
+                        <input type="text" id="nombre" th:field="*{nombre}" class="form-control" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="userName" class="form-label">Usuario</label>
+                        <input type="text" id="userName" th:field="*{userName}" class="form-control" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="contrasena" class="form-label">Contraseña</label>
+                        <input type="password" id="contrasena" th:field="*{contrasena}" class="form-control" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="rol" class="form-label">Rol</label>
+                        <select id="rol" th:field="*{rol}" class="form-select" required>
+                            <option value="" disabled selected>Seleccione un rol</option>
+                            <option value="ADMIN">ADMIN</option>
+                            <option value="SUPERADMIN">SUPERADMIN</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn btn-success w-100 mt-3">Crear Usuario</button>
+                </form>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <div th:replace="layout/layout :: footer"></div>
+    </div>
+</div>
+</body>
+</html>

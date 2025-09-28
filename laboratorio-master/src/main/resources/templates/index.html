@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Inicio - Laboratorio JDC</title>
+  <link rel="stylesheet" th:href="@{/css/layoutStyle.css}">
+</head>
+<body>
+<div class="layout">
+  <!-- Sidebar -->
+  <div th:replace="layout/layout :: sidebar"></div>
+
+  <div class="main-section">
+    <!-- Header -->
+    <div th:replace="layout/layout :: header"></div>
+
+    <!-- Contenido principal -->
+    <main class="content">
+      <div class="welcome-box">
+        <h2>Bienvenido al laboratorio<br><span>JDC</span></h2>
+        <p>
+          Nos alegra contar contigo en nuestro sistema de gestión.<br>
+          Aquí podrás administrar de manera segura y organizada todas las sustancias químicas,
+          controlar el inventario, generar reportes y mantener un registro confiable para el
+          buen funcionamiento del laboratorio.
+        </p>
+        <img th:src="@{/img/scientist.png}" alt="Icono Científico" class="scientist">
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <div th:replace="layout/layout :: footer"></div>
+  </div>
+</div>
+</body>
+</html>

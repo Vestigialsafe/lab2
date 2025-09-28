@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" th:href="@{/css/layoutStyle.css}">
+  <title>Laboratorio JDC</title>
+</head>
+<body>
+<!-- 🔹 Sidebar -->
+<aside th:fragment="sidebar" class="sidebar">
+  <div class="sidebar-header">
+    <div class="user-icon">AD</div>
+    <p>BIENVENIDO<br><span>ADMIN</span></p>
+  </div>
+  <nav>
+    <ul>
+      <li><a th:href="@{/dashboard}">📊 Dashboard</a></li>
+      <li><a th:href="@{/categorias}">📑 Categorías</a></li>
+      <li><a th:href="@{/admin}">👤 Administración</a></li>
+      <li><a th:href="@{/usuarios/vista}">🧑‍💻 Usuarios</a></li>
+      <li><a th:href="@{/laboratorios/vista}">🔬 Laboratorios</a></li>
+      <li><a th:href="@{/categorias/vista}">⚗️ Categorias</a></li>
+
+    </ul>
+  </nav>
+</aside>
+
+<!-- 🔹 Header -->
+<header>
+  <div></div> <!-- espacio vacío a la izquierda -->
+
+  <div class="logo">
+    <img th:src="@{/img/loguito.png}" alt="Logo JDC" height="50">
+
+  </div>
+
+  <div class="acciones">
+    <span class="notificacion">🔔</span>
+    <button class="logout">Log Out</button>
+  </div>
+</header>
+
+
+<!-- 🔹 Footer -->
+<footer th:fragment="footer" class="footer">
+  <p>© 2025 Fundación Universitaria Juan de Castellanos - Laboratorio de Química</p>
+  <p>Todos los derechos reservados | <a href="#">Política de seguridad</a></p>
+</footer>
+</body>
+</html>
