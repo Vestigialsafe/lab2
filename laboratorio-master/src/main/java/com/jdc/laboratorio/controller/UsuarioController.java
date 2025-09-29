@@ -58,7 +58,12 @@ public class UsuarioController {
 
     @GetMapping("/vista")
     public String vistaUsuarios(Model model) {
-        model.addAttribute("usuarios", usuarioService.listarTodos());
-        return "usuario"; // Carga usuario.html desde /templates
+        List<Usuario> usuarios = usuarioService.listarTodos();
+
+        model.addAttribute("usuarios", usuarios);
+        model.addAttribute("totalUsuarios", usuarios.size());
+
+        return "usuario";
     }
+
 }

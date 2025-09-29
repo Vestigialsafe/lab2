@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Gestión de Usuarios</title>
+    <meta charset="UTF-8">
+    <title>Usuarios Registrados - Laboratorio JDC</title>
     <link rel="stylesheet" th:href="@{/css/layoutStyle.css}">
     <link rel="stylesheet" th:href="@{/css/usuarioStyle.css}">
 </head>
@@ -10,66 +11,59 @@
     <!-- Sidebar -->
     <div th:replace="layout/layout :: sidebar"></div>
 
-    <!-- Main -->
     <div class="main-section">
+        <!-- Header -->
         <div th:replace="layout/layout :: header"></div>
-
-        <!-- Título -->
-        <div>
-            <h1 class="page-title col-last">Usuarios registrados</h1>
-        </div>
-
-        <!-- Barra superior (fuera del main) -->
-        <div class="top-bar">
-            <span>Total: <span th:text="${usuarios.size()}">0</span></span>
-            <a th:href="@{/usuarios/nuevo}" class="btn btn-primary">Crear nuevo usuario</a>
-        </div>
 
         <!-- Contenido principal -->
         <main class="content">
-            <!-- Contenedor para la tabla -->
-            <div class="content-area">
-                <table class="table">
+        <div class="box">
+            <!-- ✅ Título centrado arriba -->
+            <div class="title-container">
+                <h1 class="page-title">Usuarios Registrados</h1>
+            </div>
+
+            <!-- ✅ Botón en su propio bloque -->
+            <div class="button-container">
+                <a th:href="@{/usuarios/nuevo}" class="btn-add">+ Agregar Usuario</a>
+
+            </div>
+
+            <!-- ✅ Tabla en su propio contenedor -->
+            <div class="table-container">
+                <table class="user-table">
                     <thead>
                     <tr>
                         <th>ID</th>
                         <th>Nombre</th>
-                        <th>Usuario</th>
+                        <th>Username</th>
                         <th>Contraseña</th>
                         <th>Rol</th>
-                        <th>Acciones</th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr th:each="usuario : ${usuarios}">
-                        <td th:text="${usuario.idUsuario}"></td>
-                        <td th:text="${usuario.nombre}"></td>
-                        <td th:text="${usuario.userName}"></td>
-                        <td th:text="${usuario.contrasena}"></td>
-                        <td th:text="${usuario.rol}"></td>
-                        <td>
-                            <a th:href="@{/usuarios/editar/{id}(id=${usuario.idUsuario})}"
-                               class="btn btn-sm btn-warning">Editar</a>
-                            <form th:action="@{/usuarios/eliminar/{id}(id=${usuario.idUsuario})}" method="post"
-                                  style="display:inline;"
-                                  onsubmit="return confirmarEliminar()">
-                                <button type="submit" class="btn btn-sm btn-danger">Eliminar</button>
-                            </form>
-                        </td>
+                        <td th:text="${usuario.idUsuario}">1</td>
+                        <td th:text="${usuario.nombre}">Juan Pérez</td>
+                        <td th:text="${usuario.userName}">juanxd</td>
+                        <td th:text="${usuario.contrasena}">1111</td>
+                        <td th:text="${usuario.rol}">Administrador</td>
                     </tr>
                     </tbody>
                 </table>
             </div>
+            <!-- ✅ Total de usuarios en bloque separado -->
+            <div class="contotal-container">
+    <span class="contotal">
+        Total de usuarios: <b th:text="${totalUsuarios}">0</b>
+    </span>
+            </div>
+        </div>
         </main>
 
+        <!-- Footer -->
         <div th:replace="layout/layout :: footer"></div>
     </div>
 </div>
-
-<script>
-    function confirmarEliminar() {
-        return confirm("¿Estás seguro de que deseas eliminar este usuario?");
-    }
-</script>
 </body>
 </html>

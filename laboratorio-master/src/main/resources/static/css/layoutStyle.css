@@ -17,7 +17,7 @@ body {
     color: #fff;
     display: flex;
     flex-direction: column;
-    height: 100vh; /* Toda la altura */
+    height: auto;
     padding: 1.5rem 1rem;
     width: 200px;
 }
@@ -39,10 +39,10 @@ body {
     font-weight: bold;
     color: #000;
     font-size: 18px;
-    margin: 0 auto 0.8rem auto; /* centra el círculo */
+    margin: 0 auto 0.8rem auto;
 }
 
-/* 🔹 Menú (queda al final con margin-top auto) */
+/* 🔹 Menú */
 .sidebar nav {
     margin-top: initial;
 }
@@ -77,7 +77,8 @@ body {
 .main-section {
     flex: 1;
     display: flex;
-    flex-direction: column;
+    flex-direction: column; /* Header arriba, content en medio, footer abajo */
+    min-height: 100vh;
 }
 
 /* 🔹 Header */
@@ -86,8 +87,8 @@ header {
     grid-template-columns: 1fr auto 1fr;
     align-items: center;
     padding: 0.5rem 1rem;
-    background: #022140; /* mismo azul que la sidebar */
-    color: #fff; /* texto blanco para contraste */
+    background: #022140;
+    color: #fff;
     height: 60px;
 }
 
@@ -118,7 +119,7 @@ header .notificacion {
 
 /* 🔹 Botón LogOut */
 .logout {
-    background: #28a745; /* verde para destacar */
+    background: #28a745;
     color: #fff;
     border: none;
     padding: 8px 15px;
@@ -129,36 +130,58 @@ header .notificacion {
     background: #218838;
 }
 
-/* Content */
+/* Content (centrado) */
 .content {
-    flex: 1;
+    flex: 1; /* ocupa el espacio disponible */
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     padding: 20px;
-    background: url("../img/lab-bg.jpg") no-repeat center center/cover;
+
+    /* Imagen con overlay negro semitransparente */
+    background: linear-gradient(
+            rgba(0, 0, 0, 0.6),  /* negro arriba */
+            rgba(0, 0, 0, 0.6)   /* negro abajo */
+    ),
+    url('../img/imglaboratorio.jpg');
+
+    background-size: cover;      /* que cubra todo */
+    background-position: center; /* centrada */
+    background-repeat: no-repeat;
 }
+
+
+
 .welcome-box {
-    background: rgba(255, 255, 255, 0.9);
-    padding: 30px;
+    background: rgba(255, 255, 255, 0.87);
+    height: 500px;
     border-radius: 15px;
-    max-width: 700px;
+    width: 1200px;
     text-align: center;
+    padding: 20px;
 }
 .welcome-box h2 {
-    font-size: 26px;
+    font-size: 40px;
     color: #2e6b3f;
+    padding: 10px;
 }
 .welcome-box h2 span {
     font-weight: bold;
+    font-size: 40px;
 }
 .welcome-box p {
-    margin: 15px 0;
+    max-width: 800px; /* el párrafo no ocupará todo el ancho */
+    margin: 0 auto;   /* lo centra dentro de la caja */
     line-height: 1.6;
+    font-weight: bold;
+    font-size: 20px;
 }
+
 .scientist {
     width: 90px;
     margin-top: 15px;
+    padding: 10px;
 }
 
 /* Footer */
@@ -168,6 +191,7 @@ header .notificacion {
     text-align: center;
     padding: 15px;
     font-size: 14px;
+    margin-top: auto; /* lo empuja al final */
 }
 .footer a {
     color: #ffcc00;

@@ -1,0 +1,90 @@
+/* === Usuarios Crear === */
+
+/* Contenedor principal (hereda fondo de .content) */
+.content {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+
+    /* Fondo con overlay negro */
+    background: linear-gradient(
+            rgba(0, 0, 0, 0.6),
+            rgba(0, 0, 0, 0.6)
+    ),
+    url('../img/imglaboratorio.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* Caja del formulario */
+.box {
+    background: rgba(255, 255, 255, 0.87);
+    border-radius: 15px;
+    width: 600px;
+    padding: 30px 40px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    text-align: left;
+}
+
+/* Título */
+.box h2 {
+    text-align: center;
+    font-size: 28px;
+    font-weight: 700;
+    color: #000000;
+    margin-bottom: 25px;
+}
+
+/* Formulario */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+/* Labels */
+.form-label {
+    font-size: 15px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 6px;
+    display: block;
+}
+
+/* Inputs y Selects */
+.form-control,
+.form-select {
+    width: 95%;
+    padding: 10px 14px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 15px;
+    transition: border 0.3s, box-shadow 0.3s;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: #3992ff;
+    box-shadow: 0 0 5px rgba(57, 146, 255, 0.4);
+    outline: none;
+}
+
+/* Botón */
+.btn-success {
+    background-color: #3992ff;
+    color: #fff;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.btn-success:hover {
+    background-color: #2e6b3f;
+}

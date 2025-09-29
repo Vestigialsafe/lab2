@@ -1,0 +1,112 @@
+/* === Layout general === */
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: 'Mulish', sans-serif;
+}
+
+
+/* Main Section */
+.main-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Content */
+.content {
+    flex: 1;
+    display: flex;
+    justify-content: center; /* centro horizontal */
+    align-items: center;     /* centro vertical */
+    padding: 20px;
+
+    /* Fondo difuminado */
+    background: linear-gradient(
+            rgba(0, 0, 0, 0.6),
+            rgba(0, 0, 0, 0.6)
+    ),
+    url('../img/imglaboratorio.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* Box principal */
+.box {
+    background: rgba(255, 255, 255, 0.92); /* semi-transparente */
+    padding: 30px;
+    border-radius: 15px;
+    width: 100%;
+    max-width: 700px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+}
+
+/* Título */
+.box h1 {
+    text-align: center;
+    margin-bottom: 25px;
+    color: black;
+}
+
+/* Formularios */
+.form-control, .form-select {
+    border-radius: 8px;
+    padding: 10px;
+}
+.form-label {
+    font-size: 15px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 6px;
+    display: block;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+
+
+
+/* Botones generales */
+.btn {
+    padding: 0.6rem 1.5rem;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16); /* sombra ligera */
+}
+
+/* Botón principal: Guardar */
+.btn-primary {
+    background: linear-gradient(135deg, #36d1dc, #5b86e5); /* degradado */
+    color: white;
+    border: none;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.25);
+    background: linear-gradient(135deg, #5b86e5, #36d1dc);
+}
+
+/* Botón secundario: Cancelar */
+.btn-secondary {
+    background: #f0f0f0;
+    color: #333;
+    border: 1px solid #ccc;
+}
+
+.btn-secondary:hover {
+    background: #e0e0e0;
+    color: #000;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
