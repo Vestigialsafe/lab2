@@ -42,6 +42,11 @@
                                 <p class="card-text">
                                     <small th:text="'Categoría: ' + ${sub.categoria.nombre}"></small>
                                 </p>
+
+                                <!-- Botón ver sustancias -->
+                                <a th:href="@{|/sustancias/subcategoria/${sub.idSubCategoria}|}"
+                                   class="btn btn-info btn-sm">Ver Sustancias</a>
+
                                 <a th:href="@{|/subcategorias/editar/${sub.idSubCategoria}|}"
                                    class="btn btn-primary btn-sm">Editar</a>
 
@@ -52,6 +57,7 @@
                                     <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
                                 </form>
                             </div>
+
 
                         </div>
                     </div>

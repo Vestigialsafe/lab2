@@ -18,41 +18,38 @@ public class Sustancia {
     @Column(name = "nombre", nullable = false, length = 100)
     private String nombre;
 
-    @Column(name = "presentacion")
-    private Integer presentacion;
+    @Column(name = "stock")
+    private Integer stock;
 
-    @Column(name = "estado", length = 255)
-    private String estado;
+    @Column(name = "unidad", length = 50)
+    private String unidad;
 
-    @Column(name = "riesgo", length = 255)
-    private String riesgo;
+    @Column(name = "envase_original")
+    private Boolean envaseOriginal;
 
     @Column(name = "fecha_vencimiento")
     private LocalDate fechaVencimiento;
 
-    @Column(name = "stock")
-    private Integer stock;
-
-    @Column(name = "Cas", length = 255)
+    @Column(name = "cas", length = 255)
     private String cas;
 
-    @Column(name = "Pureza", length = 255)
+    @Column(name = "pureza", length = 255)
     private String pureza;
 
-    @Column(name = "Marca", length = 255)
+    @Column(name = "marca", length = 255)
     private String marca;
 
-    @Column(name = "Embase")
-    private Boolean embace;
+    // Documentación guardada en la BD como archivo binario (ej. PDF, DOC)
+    @Lob
+    @Column(name = "documentacion")
+    private byte[] documentacion;  // ⚡ aquí se guarda como bytea en Postgres
 
-    @Column(name = "Documentacion", length = 500)
-    private String documentacion;
-
+    // Relación con laboratorio (Muchas sustancias -> Un laboratorio)
     @ManyToOne
     @JoinColumn(name = "idLaboratorio", nullable = false)
     private Laboratorio laboratorio;
 
-    // 🔗 Relación N:M con SubCategoria
+    // Relación N:M con subcategorías
     @ManyToMany
     @JoinTable(
             name = "sustancia_subcategoria",
@@ -64,20 +61,18 @@ public class Sustancia {
     public Sustancia() {
     }
 
-    public Sustancia(Long idSustancia, String nombre, Integer presentacion, String estado, String riesgo,
-                     LocalDate fechaVencimiento, Integer stock, String cas, String pureza, String marca,
-                     Boolean embace, String documentacion, Laboratorio laboratorio) {
+    public Sustancia(Long idSustancia, String nombre, Integer stock, String unidad, Boolean envaseOriginal,
+                     LocalDate fechaVencimiento, String cas, String pureza, String marca,
+                     byte[] documentacion, Laboratorio laboratorio) {
         this.idSustancia = idSustancia;
         this.nombre = nombre;
-        this.presentacion = presentacion;
-        this.estado = estado;
-        this.riesgo = riesgo;
-        this.fechaVencimiento = fechaVencimiento;
         this.stock = stock;
+        this.unidad = unidad;
+        this.envaseOriginal = envaseOriginal;
+        this.fechaVencimiento = fechaVencimiento;
         this.cas = cas;
         this.pureza = pureza;
         this.marca = marca;
-        this.embace = embace;
         this.documentacion = documentacion;
         this.laboratorio = laboratorio;
     }
@@ -89,20 +84,17 @@ public class Sustancia {
     public String getNombre() { return nombre; }
     public void setNombre(String nombre) { this.nombre = nombre; }
 
-    public Integer getPresentacion() { return presentacion; }
-    public void setPresentacion(Integer presentacion) { this.presentacion = presentacion; }
+    public Integer getStock() { return stock; }
+    public void setStock(Integer stock) { this.stock = stock; }
 
-    public String getEstado() { return estado; }
-    public void setEstado(String estado) { this.estado = estado; }
+    public String getUnidad() { return unidad; }
+    public void setUnidad(String unidad) { this.unidad = unidad; }
 
-    public String getRiesgo() { return riesgo; }
-    public void setRiesgo(String riesgo) { this.riesgo = riesgo; }
+    public Boolean getEnvaseOriginal() { return envaseOriginal; }
+    public void setEnvaseOriginal(Boolean envaseOriginal) { this.envaseOriginal = envaseOriginal; }
 
     public LocalDate getFechaVencimiento() { return fechaVencimiento; }
     public void setFechaVencimiento(LocalDate fechaVencimiento) { this.fechaVencimiento = fechaVencimiento; }
-
-    public Integer getStock() { return stock; }
-    public void setStock(Integer stock) { this.stock = stock; }
 
     public String getCas() { return cas; }
     public void setCas(String cas) { this.cas = cas; }
@@ -113,11 +105,8 @@ public class Sustancia {
     public String getMarca() { return marca; }
     public void setMarca(String marca) { this.marca = marca; }
 
-    public Boolean getEmbace() { return embace; }
-    public void setEmbace(Boolean embace) { this.embace = embace; }
-
-    public String getDocumentacion() { return documentacion; }
-    public void setDocumentacion(String documentacion) { this.documentacion = documentacion; }
+    public byte[] getDocumentacion() { return documentacion; }
+    public void setDocumentacion(byte[] documentacion) { this.documentacion = documentacion; }
 
     public Laboratorio getLaboratorio() { return laboratorio; }
     public void setLaboratorio(Laboratorio laboratorio) { this.laboratorio = laboratorio; }
@@ -128,8 +117,7 @@ public class Sustancia {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Sustancia sustancia = (Sustancia) o;
+        if (!(o instanceof Sustancia sustancia)) return false;
         return Objects.equals(idSustancia, sustancia.idSustancia);
     }
 
@@ -143,17 +131,15 @@ public class Sustancia {
         return "Sustancia{" +
                 "idSustancia=" + idSustancia +
                 ", nombre='" + nombre + '\'' +
-                ", presentacion=" + presentacion +
-                ", estado='" + estado + '\'' +
-                ", riesgo='" + riesgo + '\'' +
-                ", fechaVencimiento=" + fechaVencimiento +
                 ", stock=" + stock +
+                ", unidad='" + unidad + '\'' +
+                ", envaseOriginal=" + envaseOriginal +
+                ", fechaVencimiento=" + fechaVencimiento +
                 ", cas='" + cas + '\'' +
                 ", pureza='" + pureza + '\'' +
                 ", marca='" + marca + '\'' +
-                ", embace=" + embace +
-                ", documentacion='" + documentacion + '\'' +
-                ", laboratorio=" + laboratorio +
+                ", laboratorio=" + (laboratorio != null ? laboratorio.getIdLaboratorio() : null) +
+                ", subcategorias=" + subcategorias.size() +
                 '}';
     }
 }

@@ -50,7 +50,14 @@
           </div>
 
           <button type="submit" class="btn btn-primary">Guardar</button>
-          <a th:href="@{/subcategorias/vista/{id}(id=${subCategoria.categoria.idCategoria})}" class="btn btn-secondary">Cancelar</a>
+          <!-- Botón Cancelar -->
+          <a th:href="${subCategoria.categoria != null && subCategoria.categoria.idCategoria != null} ?
+            @{/subcategorias/vista/{id}(id=${subCategoria.categoria.idCategoria})} :
+            @{/categorias/vista}"
+             class="btn btn-secondary">Cancelar</a>
+
+
+
         </form>
       </div>
     </main>
