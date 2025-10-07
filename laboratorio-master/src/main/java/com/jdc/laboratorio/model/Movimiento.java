@@ -2,10 +2,8 @@ package com.jdc.laboratorio.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
-
 import java.time.LocalDate;
 import java.util.Objects;
-
 
 @Entity
 @Table(name = "Movimientos")
@@ -15,8 +13,9 @@ public class Movimiento {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idMovimiento;
 
-    @Column(nullable = false)
-    private boolean tipoMovimiento; // true = entrada, false = salida
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    private TipoMovimiento tipoMovimiento; // ENTRADA o SALIDA
 
     @Column(nullable = false)
     @Min(1)
@@ -32,10 +31,10 @@ public class Movimiento {
     @JoinColumn(name = "idSustancia", nullable = false)
     private Sustancia sustancia;
 
-    public Movimiento() {
-    }
+    public Movimiento() {}
 
-    public Movimiento(Long idMovimiento, boolean tipoMovimiento, int cantidad, LocalDate fechaMovimiento, String descripcion, Sustancia sustancia) {
+    public Movimiento(Long idMovimiento, TipoMovimiento tipoMovimiento, int cantidad,
+                      LocalDate fechaMovimiento, String descripcion, Sustancia sustancia) {
         this.idMovimiento = idMovimiento;
         this.tipoMovimiento = tipoMovimiento;
         this.cantidad = cantidad;
@@ -52,20 +51,19 @@ public class Movimiento {
         this.idMovimiento = idMovimiento;
     }
 
-    public boolean isTipoMovimiento() {
+    public TipoMovimiento getTipoMovimiento() {
         return tipoMovimiento;
     }
 
-    public void setTipoMovimiento(boolean tipoMovimiento) {
+    public void setTipoMovimiento(TipoMovimiento tipoMovimiento) {
         this.tipoMovimiento = tipoMovimiento;
     }
 
-    @Min(1)
     public int getCantidad() {
         return cantidad;
     }
 
-    public void setCantidad(@Min(1) int cantidad) {
+    public void setCantidad(int cantidad) {
         this.cantidad = cantidad;
     }
 
@@ -96,14 +94,13 @@ public class Movimiento {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Movimiento that = (Movimiento) o;
+        if (!(o instanceof Movimiento that)) return false;
         return Objects.equals(idMovimiento, that.idMovimiento);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(idMovimiento);
+        return Objects.hash(idMovimiento);
     }
 
     @Override
@@ -114,8 +111,7 @@ public class Movimiento {
                 ", cantidad=" + cantidad +
                 ", fechaMovimiento=" + fechaMovimiento +
                 ", descripcion='" + descripcion + '\'' +
-                ", sustancia=" + sustancia +
+                ", sustancia=" + (sustancia != null ? sustancia.getNombre() : "null") +
                 '}';
     }
 }
-

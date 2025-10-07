@@ -1,0 +1,91 @@
+/* === Estilos de Categorías === */
+
+/* Contenedor principal */
+.categorias-box {
+    max-width: 700px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+/* === Fila de cards === */
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: stretch; /* 🔹 Igual altura entre cards */
+}
+
+/* === Igualar altura entre columnas Bootstrap === */
+.row > [class*='col-'] {
+    display: flex; /* 🔹 Obliga a que las columnas igualen altura */
+}
+
+.row > [class*='col-'] > .card {
+    flex: 1; /* 🔹 La card ocupa toda la altura disponible */
+}
+
+/* === Cards === */
+.card {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    background-color: #fff;
+    padding-bottom: 10px;
+}
+
+/* Efecto hover */
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Imagen */
+.card-img-top {
+    width: 100px !important;
+    height: 100px !important;
+    object-fit: contain;
+    margin-top: 15px;
+}
+
+/* Cuerpo del texto */
+.card-body {
+    padding: 10px 15px;
+    flex-grow: 1; /* 🔹 Permite igualar altura entre cards */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+/* Título */
+.card-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+    line-height: 1.2;
+    word-wrap: break-word;
+    white-space: normal;
+    max-width: 90%;
+}
+
+/* === Responsivo === */
+@media (max-width: 768px) {
+    .card {
+        margin-bottom: 20px;
+    }
+
+    .card-img-top {
+        width: 80px !important;
+        height: 80px !important;
+    }
+
+    .card-title {
+        font-size: 16px;
+    }
+}

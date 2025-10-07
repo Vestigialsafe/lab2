@@ -34,14 +34,15 @@ public class SustanciaController {
         this.subCategoriaService = subCategoriaService;
     }
 
-    // 📌 Listar todas
+    // 📌 Listar todas las sustancias
     @GetMapping("/vista")
     public String listar(Model model) {
         model.addAttribute("sustancias", sustanciaService.listarTodas());
+        model.addAttribute("titulo", "Listado de Sustancias");
         return "sustancias";
     }
 
-    // 📌 Formulario crear
+    // 📌 Mostrar formulario para crear nueva sustancia
     @GetMapping("/crear")
     public String mostrarFormularioCrear(
             @RequestParam(value = "idSubCategoria", required = false) Integer idSubCategoria,
@@ -50,15 +51,12 @@ public class SustanciaController {
         model.addAttribute("sustancia", new Sustancia());
         model.addAttribute("laboratorios", laboratorioService.listarTodos());
         model.addAttribute("subcategorias", subCategoriaService.listarTodas());
-
-        // Guardamos el idSubCategoria en contexto para el formulario
         model.addAttribute("idSubCategoriaContexto", idSubCategoria);
 
         return "crearSustancia";
     }
 
-
-    // 📌 Guardar
+    // 📌 Guardar sustancia
     @PostMapping("/guardar")
     public String guardar(@ModelAttribute Sustancia sustancia,
                           @RequestParam(value = "documentoFile", required = false) MultipartFile documentoFile,
@@ -68,15 +66,15 @@ public class SustanciaController {
                           @RequestParam(value = "idSubCategoriaContexto", required = false) Integer idSubCategoriaContexto,
                           RedirectAttributes redirectAttrs) throws IOException {
 
-        // 📌 Guardar documento si viene cargado
+        // Guardar documento PDF si se carga
         if (documentoFile != null && !documentoFile.isEmpty()) {
             sustancia.setDocumentacion(documentoFile.getBytes());
         }
 
-        // 📌 Asignar laboratorio
+        // Asignar laboratorio
         laboratorioService.buscarPorId(idLaboratorio).ifPresent(sustancia::setLaboratorio);
 
-        // 📌 Asignar subcategorías si hay seleccionadas
+        // Asignar subcategorías seleccionadas
         if (subcategoriasSeleccionadas != null && !subcategoriasSeleccionadas.isEmpty()) {
             List<SubCategoria> seleccionadas = subcategoriasSeleccionadas.stream()
                     .map(id -> subCategoriaService.buscarPorId(id).orElse(null))
@@ -85,13 +83,11 @@ public class SustanciaController {
             sustancia.setSubcategorias(seleccionadas);
         }
 
-        // 📌 Guardar sustancia
         sustanciaService.guardar(sustancia);
 
-        // 📌 Mensaje de confirmación
-        redirectAttrs.addFlashAttribute("mensaje", "Sustancia guardada ✅");
+        redirectAttrs.addFlashAttribute("mensaje", "✅ Sustancia guardada correctamente");
 
-        // 📌 Redirigir según contexto
+        // Redirigir según contexto
         if (idSubCategoriaContexto != null) {
             return "redirect:/sustancias/subcategoria/" + idSubCategoriaContexto;
         } else {
@@ -99,26 +95,27 @@ public class SustanciaController {
         }
     }
 
-
-    // 📌 Eliminar
+    // 📌 Eliminar sustancia
     @GetMapping("/eliminar/{id}")
     public String eliminar(@PathVariable Long id,
                            @RequestParam(value = "subcat", required = false) Integer idSubCategoria,
                            RedirectAttributes redirectAttrs) {
-        sustanciaService.eliminar(id);
-        redirectAttrs.addFlashAttribute("mensaje", "Sustancia eliminada ❌");
+        try {
+            sustanciaService.eliminar(id);
+            redirectAttrs.addFlashAttribute("mensaje", "❌ Sustancia eliminada correctamente");
+        } catch (Exception e) {
+            redirectAttrs.addFlashAttribute("error",
+                    "⚠️ No se puede eliminar la sustancia porque tiene movimientos registrados.");
+        }
 
-        // Si viene desde una subcategoría, lo redirigimos allá
         if (idSubCategoria != null) {
             return "redirect:/sustancias/subcategoria/" + idSubCategoria;
         }
-
-        // Si no, volvemos a la vista general
         return "redirect:/sustancias/vista";
     }
 
 
-    // 📌 Descargar documento
+    // 📌 Descargar documento PDF
     @GetMapping("/documento/{id}")
     public ResponseEntity<byte[]> verDocumento(@PathVariable Long id) {
         return sustanciaService.buscarPorId(id)
@@ -130,7 +127,7 @@ public class SustanciaController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // 📌 Listar sustancias de una subcategoría
+    // 📌 Listar sustancias según subcategoría
     @GetMapping("/subcategoria/{idSubCategoria}")
     public String listarPorSubcategoria(@PathVariable Integer idSubCategoria, Model model) {
         List<Sustancia> sustancias = sustanciaService.buscarPorSubcategoria(idSubCategoria);
@@ -144,5 +141,4 @@ public class SustanciaController {
 
         return "sustancias";
     }
-
 }

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title><!DOCTYPE html>
+      <html lang="es" xmlns:th="http://www.thymeleaf.org">
+      <head>
+      <meta charset="UTF-8">
+      <title>Registrar Movimiento - Laboratorio JDC</title>
+  <link rel="stylesheet" th:href="@{/css/layoutStyle.css}">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-light">
+<div class="layout">
+  <!-- Sidebar -->
+  <div th:replace="layout/layout :: sidebar"></div>
+
+  <div class="main-section">
+    <!-- Header -->
+    <div th:replace="layout/layout :: header"></div>
+
+    <!-- Contenido principal -->
+    <main class="content">
+
+      <div class="container mt-5">
+        <div class="card shadow-lg">
+          <div class="card-header bg-primary text-white text-center">
+            <h4 class="mb-0">Registrar Movimiento</h4>
+          </div>
+
+          <div class="card-body">
+            <form th:action="@{/movimientos/guardar}" th:object="${movimiento}" method="post">
+              <input type="hidden" th:field="*{idMovimiento}" />
+
+              <!-- Sustancia -->
+              <div class="mb-3">
+                <label class="form-label fw-bold">Sustancia</label>
+                <select class="form-select" th:field="*{sustancia.idSustancia}" required>
+                  <option th:if="${sustancia != null}"
+                          th:value="${sustancia.idSustancia}"
+                          th:text="${sustancia.nombre}" selected></option>
+                  <option th:each="s : ${sustancias}"
+                          th:value="${s.idSustancia}"
+                          th:text="${s.nombre}"></option>
+                </select>
+              </div>
+
+              <!-- Tipo Movimiento -->
+              <div class="mb-3">
+                <label class="form-label fw-bold">Tipo de Movimiento</label>
+                <select class="form-select" th:field="*{tipoMovimiento}" required>
+                  <option value="" disabled selected>Seleccione...</option>
+                  <option th:each="tipo : ${tipos}"
+                          th:value="${tipo}"
+                          th:text="${tipo}"></option>
+                </select>
+              </div>
+
+              <!-- Cantidad -->
+              <div class="mb-3">
+                <label class="form-label fw-bold">Cantidad</label>
+                <input type="number" th:field="*{cantidad}" class="form-control" min="1" required>
+              </div>
+
+              <!-- Descripción -->
+              <div class="mb-3">
+                <label class="form-label fw-bold">Descripción</label>
+                <textarea th:field="*{descripcion}" class="form-control" rows="3"
+                          placeholder="Escriba una breve descripción del movimiento"></textarea>
+              </div>
+
+              <!-- Botones -->
+              <div class="d-flex justify-content-between">
+                <a th:href="@{/movimientos/vista}" class="btn btn-secondary">Volver</a>
+                <button type="submit" class="btn btn-success">Guardar Movimiento</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+    </main>
+
+    <!-- Footer -->
+    <div th:replace="layout/layout :: footer"></div>
+  </div>
+</div>
+</body>
+</html>
+</title>
+</head>
+<body>
+
+</body>
+</html>

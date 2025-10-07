@@ -99,21 +99,28 @@
         <div class="row mb-3">
           <div class="col-md-12">
             <label class="form-label">Subcategorías</label>
-            <div class="row row-cols-2 row-cols-md-3">
-              <div class="form-check" th:each="sub : ${subcategorias}">
+            <div class="row row-cols-2 row-cols-md-3 g-3">
+              <div class="form-check text-center" th:each="sub : ${subcategorias}">
+                <!-- Checkbox -->
                 <input class="form-check-input"
                        type="checkbox"
                        name="subcategoriasSeleccionadas"
                        th:value="${sub.idSubCategoria}"
                        th:id="'subcat-' + ${sub.idSubCategoria}">
 
-                <label class="form-check-label"
-                       th:for="'subcat-' + ${sub.idSubCategoria}"
-                       th:text="${sub.nombre}"></label>
+                <label class="form-check-label d-block mt-1"
+                       th:for="'subcat-' + ${sub.idSubCategoria}">
+                  <img th:if="${sub.imagen != null}"
+                       th:src="@{/subcategorias/imagen/{id}(id=${sub.idSubCategoria})}"
+                       alt="Imagen subcategoría"
+                       style="width:70px; height:70px; object-fit:contain; display:block; margin:auto;">
+                  <span th:text="${sub.nombre}" class="d-block mt-1"></span>
+                </label>
               </div>
             </div>
           </div>
         </div>
+
 
         <!-- 🔹 Botones -->
         <div class="d-flex justify-content-between">

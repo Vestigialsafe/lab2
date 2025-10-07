@@ -2,11 +2,12 @@
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <title>Listado de Sustancias</title>
+  <title th:text="${titulo}">Listado de Sustancias</title>
   <link rel="stylesheet" th:href="@{/css/layoutStyle.css}">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" th:href="@{/css/estante.css}">
 </head>
+
 <body>
 <div class="layout">
   <!-- Sidebar -->
@@ -19,73 +20,78 @@
     <!-- Contenido principal -->
     <main class="content">
       <div class="d-flex justify-content-between align-items-center mb-3">
-        <h2 th:text="${titulo != null ? titulo : 'Listado de Sustancias'}"></h2>
+        <h2 th:text="${titulo}"></h2>
         <a th:href="@{/sustancias/crear(idSubCategoria=${idSubCategoria})}" class="btn btn-primary">
           + Nueva Sustancia
         </a>
-
       </div>
 
-      <!-- 📌 Estante -->
+      <!-- ✅ Mensajes de éxito o error -->
+      <div th:if="${mensaje}" class="alert alert-success alert-dismissible fade show" role="alert">
+        <span th:text="${mensaje}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+      </div>
+
+      <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <span th:text="${error}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+      </div>
+      <!-- Fin mensajes -->
+
+      <!-- 📦 Estante -->
       <div class="estante">
         <div th:each="row : ${#numbers.sequence(0, (sustancias.size() - 1) / 5)}" class="repisa">
           <div th:each="sus, iterStat : ${sustancias}"
                th:if="${iterStat.index >= row*5 and iterStat.index < (row+1)*5}"
                class="text-center">
+
             <!-- Frasco -->
             <div class="frasco" data-bs-toggle="modal"
                  th:attr="data-bs-target='#modal-' + ${sus.idSustancia}">
             </div>
             <p class="nombre-sustancia" th:text="${sus.nombre}"></p>
 
-
-            <!-- Modal -->
+            <!-- Modal de detalle -->
             <div th:id="'modal-' + ${sus.idSustancia}"
                  class="modal fade" tabindex="-1" aria-hidden="true">
               <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content p-4 rounded-4 shadow-lg">
                   <h4 class="text-center mb-3" th:text="${sus.nombre}"></h4>
 
-                  <div class="mb-2"><strong>Cantidad:</strong>
-                    <span th:text="${sus.stock + ' ' + sus.unidad}"></span>
-                  </div>
-                  <div class="mb-2"><strong>Fecha Vencimiento:</strong>
-                    <span th:text="${#temporals.format(sus.fechaVencimiento, 'dd/MM/yyyy')}"></span>
-                  </div>
-                  <div class="mb-2"><strong>Marca:</strong>
-                    <span th:text="${sus.marca}"></span>
-                  </div>
-                  <div class="mb-2"><strong>CAS:</strong>
-                    <span th:text="${sus.cas}"></span>
-                  </div>
-                  <div class="mb-2"><strong>Pureza:</strong>
-                    <span th:text="${sus.pureza}"></span>
-                  </div>
-                  <div class="mb-2"><strong>Envase Original:</strong>
-                    <span th:text="${sus.envaseOriginal ? 'Sí' : 'No'}"></span>
-                  </div>
-                  <div class="mb-2"><strong>Laboratorio:</strong>
-                    <span th:text="${sus.laboratorio != null ? sus.laboratorio.nombre : '---'}"></span>
-                  </div>
-                  <div class="mb-2"><strong>Subcategorías:</strong>
-                    <span th:each="sub : ${sus.subcategorias}"
-                          th:text="${sub.nombre}"
-                          class="badge bg-secondary me-1"></span>
+                  <div><strong>Cantidad:</strong> <span th:text="${sus.stock + ' ' + sus.unidad}"></span></div>
+                  <div><strong>Fecha Vencimiento:</strong>
+                    <span th:text="${#temporals.format(sus.fechaVencimiento, 'dd/MM/yyyy')}"></span></div>
+                  <div><strong>Marca:</strong> <span th:text="${sus.marca}"></span></div>
+                  <div><strong>CAS:</strong> <span th:text="${sus.cas}"></span></div>
+                  <div><strong>Pureza:</strong> <span th:text="${sus.pureza}"></span></div>
+                  <div><strong>Envase Original:</strong> <span th:text="${sus.envaseOriginal ? 'Sí' : 'No'}"></span></div>
+                  <div><strong>Laboratorio:</strong>
+                    <span th:text="${sus.laboratorio != null ? sus.laboratorio.nombre : '---'}"></span></div>
+
+                  <!-- Subcategorías -->
+                  <div class="text-center mt-3">
+                    <strong>Subcategorías:</strong>
+                    <div class="d-flex justify-content-center flex-wrap gap-2 mt-2">
+                      <div th:each="sub : ${sus.subcategorias}" class="subcat-icon">
+                        <img th:if="${sub.imagen != null}"
+                             th:src="@{/subcategorias/imagen/{id}(id=${sub.idSubCategoria})}"
+                             alt="Subcategoría"
+                             class="subcat-img">
+                      </div>
+                    </div>
                   </div>
 
                   <!-- Botones -->
                   <div class="d-flex justify-content-center gap-3 mt-4">
-                    <a th:href="@{'/sustancias/documento/' + ${sus.idSustancia}}"
-                       class="btn btn-dark">📄 Documento</a>
+                    <a th:href="@{'/sustancias/documento/' + ${sus.idSustancia}}" class="btn btn-dark btn-sm">📄 Documento</a>
+                    <a th:href="@{'/movimientos/sustancia/' + ${sus.idSustancia}}" class="btn btn-info btn-sm">📋 Reportes</a>
                     <a th:href="${idSubCategoria != null} ?
-            @{/sustancias/eliminar/{id}(subcat=${idSubCategoria}, id=${sus.idSustancia})} :
-            @{/sustancias/eliminar/{id}(id=${sus.idSustancia})}"
-                       class="btn btn-danger btn-sm">Eliminar</a>
-
-
-
-                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        @{/sustancias/eliminar/{id}(id=${sus.idSustancia}, subcat=${idSubCategoria})} :
+                        @{/sustancias/eliminar/{id}(id=${sus.idSustancia})}"
+                       class="btn btn-danger btn-sm">🗑 Eliminar</a>
+                    <button class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cerrar</button>
                   </div>
+
                 </div>
               </div>
             </div>
