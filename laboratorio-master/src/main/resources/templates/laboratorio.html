@@ -19,6 +19,16 @@
 
     <!-- Contenido principal -->
     <main class="content">
+      <!-- ALERTAS -->
+      <div th:if="${param.success}" class="alert alert-success text-center">
+        ✅ Laboratorio eliminado correctamente.
+      </div>
+
+      <div th:if="${param.error}" class="alert alert-danger text-center">
+        ⚠️ No se puede eliminar este laboratorio porque tiene sustancias asociadas.
+      </div>
+
+
       <div class="box">
         <h1 class="text-center text-success">Laboratorios registrados</h1>
 

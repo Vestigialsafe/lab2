@@ -23,6 +23,12 @@
             </a>
         </div>
 
+        <!-- ✅ Alertas solo visibles cuando hay mensaje o error -->
+        <div class="container px-4" th:if="${mensaje != '' or error != ''}">
+            <div th:if="${mensaje != ''}" class="alert alert-success text-center mt-2" th:text="${mensaje}"></div>
+            <div th:if="${error != ''}" class="alert alert-danger text-center mt-2" th:text="${error}"></div>
+        </div>
+
         <!-- Contenido principal -->
         <main class="content">
             <div class="categorias-box">
@@ -47,7 +53,6 @@
                                 <a th:href="@{|/sustancias/subcategoria/${sub.idSubCategoria}|}"
                                    class="btn btn-info btn-sm">Ver Sustancias</a>
 
-
                                 <!-- Botón eliminar con confirmación -->
                                 <form th:action="@{|/subcategorias/eliminar/${sub.idSubCategoria}|}"
                                       method="post" style="display:inline;"
@@ -55,8 +60,6 @@
                                     <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
                                 </form>
                             </div>
-
-
                         </div>
                     </div>
                 </div>
@@ -75,6 +78,7 @@
         margin: 0 auto;
     }
 </style>
+
 <script>
     function confirmarEliminar() {
         return confirm("¿Estás seguro de que deseas eliminar esta subcategoría?");

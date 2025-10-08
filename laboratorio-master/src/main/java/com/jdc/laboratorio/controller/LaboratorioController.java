@@ -4,6 +4,7 @@ import com.jdc.laboratorio.model.Laboratorio;
 import com.jdc.laboratorio.model.Usuario;
 import com.jdc.laboratorio.service.LaboratorioService;
 import com.jdc.laboratorio.service.UsuarioService;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -64,10 +65,16 @@ public class LaboratorioController {
 
     // Eliminar laboratorio
     @PostMapping("/eliminar/{id}")
-    public String eliminarLaboratorio(@PathVariable Integer id) {
-        laboratorioService.eliminar(id);
-        return "redirect:/laboratorios/vista";
+    public String eliminarLaboratorio(@PathVariable Integer id, Model model) {
+        try {
+            laboratorioService.eliminar(id);
+            return "redirect:/laboratorios/vista?success=true";
+        } catch (DataIntegrityViolationException e) {
+            // ⚠️ Captura el error de llave foránea
+            return "redirect:/laboratorios/vista?error=asociado";
+        }
     }
+
 
     // Vista en Thymeleaf con todos los laboratorios
     @GetMapping("/vista")
