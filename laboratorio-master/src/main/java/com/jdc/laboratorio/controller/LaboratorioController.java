@@ -24,7 +24,9 @@ public class LaboratorioController {
         this.usuarioService = usuarioService;
     }
 
-    // Formulario para crear un nuevo laboratorio
+    // ------------------------------------------------------------
+    // FORMULARIO NUEVO
+    // ------------------------------------------------------------
     @GetMapping("/nuevo")
     public String mostrarFormulario(Model model) {
         model.addAttribute("laboratorio", new Laboratorio());
@@ -36,7 +38,9 @@ public class LaboratorioController {
         return "crearLaboratorio"; // debes crear la vista crearLaboratorio.html
     }
 
-    // Guardar un nuevo laboratorio
+    // ------------------------------------------------------------
+    // GUARDAR NUEVO LABORATORIO
+    // ------------------------------------------------------------
     @PostMapping
     public String guardarLaboratorio(@ModelAttribute Laboratorio laboratorio,
                                      @RequestParam("encargadoId") Integer encargadoId) {
@@ -48,8 +52,9 @@ public class LaboratorioController {
         return "redirect:/laboratorios/vista";
     }
 
-
-    // Buscar laboratorio por ID
+    // ------------------------------------------------------------
+    // BUSCAR LABORATORIO POR ID (JSON)
+    // ------------------------------------------------------------
     @GetMapping("/{id}")
     public ResponseEntity<Laboratorio> obtenerPorId(@PathVariable Integer id) {
         return laboratorioService.buscarPorId(id)
@@ -57,13 +62,17 @@ public class LaboratorioController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // Listar todos los laboratorios (JSON)
+    // ------------------------------------------------------------
+    // LISTAR TODOS (JSON)
+    // ------------------------------------------------------------
     @GetMapping
     public List<Laboratorio> listarTodos() {
         return laboratorioService.listarTodos();
     }
 
-    // Eliminar laboratorio
+    // ------------------------------------------------------------
+    // ELIMINAR LABORATORIO
+    // ------------------------------------------------------------
     @PostMapping("/eliminar/{id}")
     public String eliminarLaboratorio(@PathVariable Integer id, Model model) {
         try {
@@ -75,11 +84,47 @@ public class LaboratorioController {
         }
     }
 
-
-    // Vista en Thymeleaf con todos los laboratorios
+    // ------------------------------------------------------------
+    // VISTA DE TODOS LOS LABORATORIOS
+    // ------------------------------------------------------------
     @GetMapping("/vista")
     public String vistaLaboratorios(Model model) {
         model.addAttribute("laboratorios", laboratorioService.listarTodos());
         return "laboratorio"; // debes crear laboratorio.html en /templates
+    }
+
+    // ------------------------------------------------------------
+    // ✅ NUEVO: FORMULARIO PARA EDITAR LABORATORIO
+    // ------------------------------------------------------------
+    @GetMapping("/editar/{id}")
+    public String mostrarFormularioEditar(@PathVariable Integer id, Model model) {
+        Laboratorio laboratorio = laboratorioService.buscarPorId(id)
+                .orElseThrow(() -> new IllegalArgumentException("Laboratorio no encontrado"));
+        List<Usuario> usuarios = usuarioService.listarTodos();
+
+        model.addAttribute("laboratorio", laboratorio);
+        model.addAttribute("usuarios", usuarios);
+        return "editarLaboratorio"; // vista de edición separada
+    }
+
+    // ✅ NUEVO: GUARDAR CAMBIOS DEL LABORATORIO EDITADO
+    @PostMapping("/actualizar/{id}")
+    public String actualizarLaboratorio(@PathVariable Integer id,
+                                        @ModelAttribute Laboratorio laboratorioActualizado,
+                                        @RequestParam("encargadoId") Integer encargadoId) {
+
+        Laboratorio laboratorio = laboratorioService.buscarPorId(id)
+                .orElseThrow(() -> new IllegalArgumentException("Laboratorio no encontrado"));
+
+        Usuario encargado = usuarioService.buscarPorId(encargadoId)
+                .orElseThrow(() -> new IllegalArgumentException("Encargado no válido"));
+
+        laboratorio.setNombre(laboratorioActualizado.getNombre());
+        laboratorio.setSede(laboratorioActualizado.getSede());
+        laboratorio.setEncargado(encargado);
+
+        laboratorioService.guardar(laboratorio);
+
+        return "redirect:/laboratorios/vista?editado=true";
     }
 }
