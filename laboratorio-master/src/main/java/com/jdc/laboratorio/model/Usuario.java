@@ -25,10 +25,14 @@ public class Usuario {
     @Column(nullable = false)
     private String rol;
 
+    @ManyToOne
+    @JoinColumn(name = "laboratorio_id")
+    private Laboratorio laboratorio; // 👈 solo aplica a ADMIN
+
     public Usuario() {
 
     }
-    public Usuario(Integer idUsuario, String nombre, String userName, String contrasena,String rol) {
+    public Usuario(Integer idUsuario, String nombre, String userName, String contrasena,String rol, Laboratorio laboratorio) {
         this.idUsuario = idUsuario;
         this.nombre = nombre;
         this.userName = userName;
@@ -61,6 +65,8 @@ public class Usuario {
     }
     public String getRol() {return rol;}
     public void setRol(String rol) {this.rol = rol;}
+    public Laboratorio getLaboratorio() {return laboratorio;}
+    public void setLaboratorio(Laboratorio laboratorio) {this.laboratorio = laboratorio;}
 
     @Override
     public boolean equals(Object o) {
@@ -82,6 +88,7 @@ public class Usuario {
                 ", userName='" + userName + '\'' +
                 ", contrasena='" + contrasena + '\'' +
                 ", rol='" + rol + '\'' +
+                ", laboratorio=" + laboratorio +
                 '}';
     }
 }
