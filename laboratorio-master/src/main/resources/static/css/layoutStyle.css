@@ -3,11 +3,18 @@ body {
     margin: 0;
     font-family: "Mulish", sans-serif;
     background: #f4f6f9;
+
+    /* 🔧 Ajuste: el body debe ocupar toda la pantalla y crecer con el contenido */
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 .layout {
     display: flex;
-    height: 100vh;
+
+    /* 🔧 Ajuste: usar min-height en lugar de height para permitir que crezca según el contenido */
+    min-height: 100vh;
 }
 
 /* Sidebar */
@@ -78,6 +85,8 @@ body {
     flex: 1;
     display: flex;
     flex-direction: column; /* Header arriba, content en medio, footer abajo */
+
+    /* 🔧 Ajuste: usar min-height en lugar de height fijo */
     min-height: 100vh;
 }
 
@@ -130,29 +139,30 @@ header .notificacion {
     background: #218838;
 }
 
-/* Content (centrado) */
+/* Content */
 .content {
     flex: 1; /* ocupa el espacio disponible */
     display: flex;
     flex-direction: column;
-    justify-content: center;
+
+    /* 🔧 Ajuste: no centramos verticalmente todo el contenido para evitar espacios */
+    justify-content: flex-start;
     align-items: center;
     padding: 20px;
 
     /* Imagen con overlay negro semitransparente */
     background: linear-gradient(
-            rgba(0, 0, 0, 0.6),  /* negro arriba */
-            rgba(0, 0, 0, 0.6)   /* negro abajo */
+            rgba(0, 0, 0, 0.6),
+            rgba(0, 0, 0, 0.6)
     ),
     url('../img/imglaboratorio.jpg');
 
-    background-size: cover;      /* que cubra todo */
-    background-position: center; /* centrada */
+    background-size: cover;
+    background-position: center;
     background-repeat: no-repeat;
 }
 
-
-
+/* Caja de bienvenida */
 .welcome-box {
     background: rgba(255, 255, 255, 0.87);
     height: 500px;
@@ -171,8 +181,8 @@ header .notificacion {
     font-size: 40px;
 }
 .welcome-box p {
-    max-width: 800px; /* el párrafo no ocupará todo el ancho */
-    margin: 0 auto;   /* lo centra dentro de la caja */
+    max-width: 800px;
+    margin: 0 auto;
     line-height: 1.6;
     font-weight: bold;
     font-size: 20px;
@@ -191,12 +201,16 @@ header .notificacion {
     text-align: center;
     padding: 15px;
     font-size: 14px;
-    margin-top: auto; /* lo empuja al final */
+
+    /* 🔧 Ajuste: esto asegura que el footer quede abajo siempre */
+    margin-top: auto;
 }
+
 .footer a {
     color: #ffcc00;
     text-decoration: none;
 }
+
 .footer a:hover {
     text-decoration: underline;
 }

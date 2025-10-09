@@ -4,6 +4,7 @@ import com.jdc.laboratorio.model.Sustancia;
 import com.jdc.laboratorio.repository.SustanciaRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,5 +40,39 @@ public class SustanciaServiceImpl implements SustanciasService {
     @Override
     public List<Sustancia> buscarPorSubcategoria(Integer idSubCategoria) {
         return sustanciaRepository.findBySubcategorias_IdSubCategoria(idSubCategoria);
+    }
+
+    @Override
+    public long contarSustancias() {
+        return sustanciaRepository.count();
+    }
+
+    @Override
+    public long contarProximasAVencer() {
+        LocalDate hoy = LocalDate.now();
+        LocalDate limite = hoy.plusMonths(1);
+        return sustanciaRepository.countByFechaVencimientoBetween(hoy, limite);
+    }
+
+    @Override
+    public long contarAgotadas() {
+        return sustanciaRepository.countByStockLessThanEqual(0);
+    }
+
+    @Override
+    public List<Object[]> contarPorCategoria() {
+        return sustanciaRepository.contarPorCategoria();
+    }
+
+    @Override
+    public List<Sustancia> listarProximasAVencer() {
+        LocalDate hoy = LocalDate.now();
+        LocalDate limite = hoy.plusMonths(1);
+        return sustanciaRepository.findProximasAVencer(hoy, limite);
+    }
+
+    @Override
+    public List<Sustancia> listarAgotadas() {
+        return sustanciaRepository.findAgotadas();
     }
 }
