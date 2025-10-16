@@ -1,5 +1,6 @@
 package com.jdc.laboratorio.model;
 
+import com.jdc.laboratorio.Enums.TipoMovimiento;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import java.time.LocalDate;

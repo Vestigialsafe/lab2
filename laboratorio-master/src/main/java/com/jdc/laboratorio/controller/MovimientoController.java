@@ -2,7 +2,7 @@ package com.jdc.laboratorio.controller;
 
 import com.jdc.laboratorio.model.Movimiento;
 import com.jdc.laboratorio.model.Sustancia;
-import com.jdc.laboratorio.model.TipoMovimiento;
+import com.jdc.laboratorio.Enums.TipoMovimiento;
 import com.jdc.laboratorio.service.MovimientoService;
 import com.jdc.laboratorio.repository.SustanciaRepository;
 import org.springframework.stereotype.Controller;

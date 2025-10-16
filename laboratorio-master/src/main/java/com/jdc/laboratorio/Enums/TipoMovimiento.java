@@ -1,4 +1,4 @@
-package com.jdc.laboratorio.model;
+package com.jdc.laboratorio.Enums;
 
 public enum TipoMovimiento {
     ENTRADA,

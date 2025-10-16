@@ -26,7 +26,7 @@ public class Usuario {
     private String rol;
 
     @ManyToOne
-    @JoinColumn(name = "laboratorio_id")
+    @JoinColumn(name = "idLaboratorio")
     private Laboratorio laboratorio; // 👈 solo aplica a ADMIN
 
     public Usuario() {
