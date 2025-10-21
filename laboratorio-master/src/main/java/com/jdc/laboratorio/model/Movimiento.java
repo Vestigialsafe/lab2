@@ -2,7 +2,7 @@ package com.jdc.laboratorio.model;
 
 import com.jdc.laboratorio.Enums.TipoMovimiento;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.DecimalMin;
 import java.time.LocalDate;
 import java.util.Objects;
 
@@ -18,9 +18,9 @@ public class Movimiento {
     @Column(nullable = false, length = 20)
     private TipoMovimiento tipoMovimiento; // ENTRADA o SALIDA
 
+    @DecimalMin(value = "0.0", inclusive = true)
     @Column(nullable = false)
-    @Min(1)
-    private int cantidad;
+    private double cantidad;
 
     @Column(nullable = false)
     private LocalDate fechaMovimiento;
@@ -34,7 +34,7 @@ public class Movimiento {
 
     public Movimiento() {}
 
-    public Movimiento(Long idMovimiento, TipoMovimiento tipoMovimiento, int cantidad,
+    public Movimiento(Long idMovimiento, TipoMovimiento tipoMovimiento, Double cantidad,
                       LocalDate fechaMovimiento, String descripcion, Sustancia sustancia) {
         this.idMovimiento = idMovimiento;
         this.tipoMovimiento = tipoMovimiento;
@@ -60,11 +60,11 @@ public class Movimiento {
         this.tipoMovimiento = tipoMovimiento;
     }
 
-    public int getCantidad() {
+    public double getCantidad() {
         return cantidad;
     }
 
-    public void setCantidad(int cantidad) {
+    public void setCantidad(double cantidad) {
         this.cantidad = cantidad;
     }
 

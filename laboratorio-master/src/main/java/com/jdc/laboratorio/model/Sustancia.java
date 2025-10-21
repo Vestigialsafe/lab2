@@ -19,7 +19,7 @@ public class Sustancia {
     private String nombre;
 
     @Column(name = "stock")
-    private Integer stock;
+    private Double stock;
 
     @Column(name = "unidad", length = 50)
     private String unidad;
@@ -61,7 +61,7 @@ public class Sustancia {
     public Sustancia() {
     }
 
-    public Sustancia(Long idSustancia, String nombre, Integer stock, String unidad, Boolean envaseOriginal,
+    public Sustancia(Long idSustancia, String nombre, Double stock, String unidad, Boolean envaseOriginal,
                      LocalDate fechaVencimiento, String cas, String pureza, String marca,
                      byte[] documentacion, Laboratorio laboratorio) {
         this.idSustancia = idSustancia;
@@ -84,8 +84,13 @@ public class Sustancia {
     public String getNombre() { return nombre; }
     public void setNombre(String nombre) { this.nombre = nombre; }
 
-    public Integer getStock() { return stock; }
-    public void setStock(Integer stock) { this.stock = stock; }
+    public Double getStock() {
+        return stock;
+    }
+
+    public void setStock(Double stock) {
+        this.stock = stock;
+    }
 
     public String getUnidad() { return unidad; }
     public void setUnidad(String unidad) { this.unidad = unidad; }

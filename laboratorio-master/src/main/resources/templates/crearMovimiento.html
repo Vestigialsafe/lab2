@@ -60,8 +60,9 @@
               <!-- Cantidad -->
               <div class="mb-3">
                 <label class="form-label fw-bold">Cantidad</label>
-                <input type="number" th:field="*{cantidad}" class="form-control" min="1" required>
+                <input type="number" th:field="*{cantidad}" class="form-control" min="0" step="0.01" required>
               </div>
+
 
               <!-- Descripción -->
               <div class="mb-3">
