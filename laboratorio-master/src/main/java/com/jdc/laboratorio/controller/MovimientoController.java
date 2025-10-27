@@ -119,7 +119,7 @@ public class MovimientoController {
 
             // 🧩 Encabezados
             Row header = sheet.createRow(2);
-            String[] columnas = {"Fecha", "Tipo de Movimiento", "Cantidad", "Stock Histórico", "Procesos", "Descripción"};
+            String[] columnas = {"Fecha", "Tipo de Movimiento", "Cantidad", "Stock ", "Procesos", "Descripción"};
             CellStyle headerStyle = workbook.createCellStyle();
             Font headerFont = workbook.createFont();
             headerFont.setBold(true);
