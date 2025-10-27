@@ -16,17 +16,24 @@ public class Movimiento {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
-    private TipoMovimiento tipoMovimiento; // ENTRADA o SALIDA
+    private TipoMovimiento tipoMovimiento;
 
     @DecimalMin(value = "0.0", inclusive = true)
     @Column(nullable = false)
     private double cantidad;
+
+    @Column(name = "procesos")
+    private Integer procesos;
 
     @Column(nullable = false)
     private LocalDate fechaMovimiento;
 
     @Column(length = 500)
     private String descripcion;
+
+    // ✅ Nuevo campo: guarda el stock resultante de ese movimiento
+    @Column(name = "stock_posterior")
+    private Double stockPosterior;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idSustancia", nullable = false)
@@ -35,13 +42,16 @@ public class Movimiento {
     public Movimiento() {}
 
     public Movimiento(Long idMovimiento, TipoMovimiento tipoMovimiento, Double cantidad,
-                      LocalDate fechaMovimiento, String descripcion, Sustancia sustancia) {
+                      LocalDate fechaMovimiento, String descripcion, Sustancia sustancia,
+                      Integer procesos, Double stockPosterior) {
         this.idMovimiento = idMovimiento;
         this.tipoMovimiento = tipoMovimiento;
         this.cantidad = cantidad;
         this.fechaMovimiento = fechaMovimiento;
         this.descripcion = descripcion;
         this.sustancia = sustancia;
+        this.procesos = procesos;
+        this.stockPosterior = stockPosterior;
     }
 
     public Long getIdMovimiento() {
@@ -92,6 +102,22 @@ public class Movimiento {
         this.sustancia = sustancia;
     }
 
+    public Integer getProcesos() {
+        return procesos;
+    }
+
+    public void setProcesos(Integer procesos) {
+        this.procesos = procesos;
+    }
+
+    public Double getStockPosterior() {
+        return stockPosterior;
+    }
+
+    public void setStockPosterior(Double stockPosterior) {
+        this.stockPosterior = stockPosterior;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -110,9 +136,11 @@ public class Movimiento {
                 "idMovimiento=" + idMovimiento +
                 ", tipoMovimiento=" + tipoMovimiento +
                 ", cantidad=" + cantidad +
+                ", procesos=" + procesos +
                 ", fechaMovimiento=" + fechaMovimiento +
                 ", descripcion='" + descripcion + '\'' +
-                ", sustancia=" + (sustancia != null ? sustancia.getNombre() : "null") +
+                ", stockPosterior=" + stockPosterior +
+                ", sustancia=" + sustancia +
                 '}';
     }
 }

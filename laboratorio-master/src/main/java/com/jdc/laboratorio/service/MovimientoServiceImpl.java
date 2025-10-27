@@ -44,10 +44,14 @@ public class MovimientoServiceImpl implements MovimientoService {
         }
 
         movimiento.setFechaMovimiento(LocalDate.now());
-        sustanciaRepository.save(sustancia);
 
+        // ✅ Guardar el stock exacto que queda tras este movimiento
+        movimiento.setStockPosterior(sustancia.getStock());
+
+        sustanciaRepository.save(sustancia);
         return movimientoRepository.save(movimiento);
     }
+
 
     @Override
     public List<Movimiento> listarMovimientos() {

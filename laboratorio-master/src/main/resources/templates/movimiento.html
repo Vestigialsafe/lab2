@@ -18,24 +18,31 @@
 
         <!-- Contenido principal -->
         <main class="content">
-
             <div class="container mt-4">
+
                 <!-- ✅ Título dinámico -->
                 <h1 class="text-center mb-4"
-                    th:text="${sustancia != null} ? 'Movimientos de ' + ${sustancia.nombre} : 'Movimientos registrados'"></h1>
+                    th:text="${sustancia != null} ? 'Movimientos de ' + ${sustancia.nombre} : 'Movimientos registrados'">
+                </h1>
 
                 <!-- ✅ Botones -->
-                <div class="d-flex justify-content-between align-items-center mb-4">
+                <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
                     <a th:if="${sustancia != null}"
                        th:href="@{'/movimientos/nuevo/' + ${sustancia.idSustancia}}"
                        class="btn btn-success">
-                        ➕ Nuevo Movimiento de esta sustancia
+                        ➕ Nuevo Movimiento
                     </a>
 
                     <a th:if="${sustancia == null}"
                        th:href="@{/movimientos/nuevo}"
                        class="btn btn-primary">
                         ➕ Registrar nuevo movimiento
+                    </a>
+
+                    <a th:if="${sustancia != null}"
+                       th:href="@{'/movimientos/exportar/' + ${sustancia.idSustancia}}"
+                       class="btn btn-outline-success">
+                        📤 Exportar a Excel
                     </a>
 
                     <a th:href="@{/sustancias/vista}" class="btn btn-secondary">⬅ Volver a Sustancias</a>
@@ -50,6 +57,8 @@
                             <th>Sustancia</th>
                             <th>Tipo</th>
                             <th>Cantidad</th>
+                            <th>Procesos</th>
+                            <th>Stock</th>
                             <th>Fecha</th>
                             <th>Descripción</th>
                         </tr>
@@ -59,17 +68,19 @@
                             <td th:text="${movimiento.idMovimiento}"></td>
                             <td th:text="${movimiento.sustancia != null ? movimiento.sustancia.nombre : 'N/A'}"></td>
                             <td>
-                <span th:text="${movimiento.tipoMovimiento}"
-                      th:classappend="${movimiento.tipoMovimiento.name() == 'ENTRADA'} ? 'text-success fw-bold' : 'text-danger fw-bold'">
-                </span>
+                                <span th:text="${movimiento.tipoMovimiento}"
+                                      th:classappend="${movimiento.tipoMovimiento.name() == 'ENTRADA'} ? 'text-success fw-bold' : 'text-danger fw-bold'">
+                                </span>
                             </td>
                             <td th:text="${movimiento.cantidad}"></td>
+                            <td th:text="${movimiento.procesos != null ? movimiento.procesos : '-'}"></td>
+                            <td th:text="${movimiento.stockPosterior != null ? movimiento.stockPosterior : '-'}"></td>
                             <td th:text="${#temporals.format(movimiento.fechaMovimiento, 'dd/MM/yyyy')}"></td>
                             <td th:text="${movimiento.descripcion != null ? movimiento.descripcion : '-'}"></td>
                         </tr>
 
                         <tr th:if="${#lists.isEmpty(movimientos)}">
-                            <td colspan="6" class="text-muted text-center">No hay movimientos registrados</td>
+                            <td colspan="8" class="text-muted text-center">No hay movimientos registrados</td>
                         </tr>
                         </tbody>
                     </table>
