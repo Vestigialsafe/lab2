@@ -1,8 +1,8 @@
 package com.jdc.laboratorio.service;
 
+import com.jdc.laboratorio.Enums.TipoMovimiento;
 import com.jdc.laboratorio.model.Movimiento;
 import com.jdc.laboratorio.model.Sustancia;
-import com.jdc.laboratorio.Enums.TipoMovimiento;
 import com.jdc.laboratorio.repository.MovimientoRepository;
 import com.jdc.laboratorio.repository.SustanciaRepository;
 import org.springframework.stereotype.Service;
@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class MovimientoServiceImpl implements MovimientoService {
@@ -26,7 +27,6 @@ public class MovimientoServiceImpl implements MovimientoService {
     @Override
     @Transactional
     public Movimiento registrarMovimiento(Movimiento movimiento) {
-
         Sustancia sustancia = sustanciaRepository.findById(movimiento.getSustancia().getIdSustancia())
                 .orElseThrow(() -> new IllegalArgumentException("Sustancia no encontrada"));
 
@@ -44,14 +44,11 @@ public class MovimientoServiceImpl implements MovimientoService {
         }
 
         movimiento.setFechaMovimiento(LocalDate.now());
-
-        // ✅ Guardar el stock exacto que queda tras este movimiento
         movimiento.setStockPosterior(sustancia.getStock());
 
         sustanciaRepository.save(sustancia);
         return movimientoRepository.save(movimiento);
     }
-
 
     @Override
     public List<Movimiento> listarMovimientos() {
@@ -61,5 +58,53 @@ public class MovimientoServiceImpl implements MovimientoService {
     @Override
     public List<Movimiento> listarPorSustancia(Long idSustancia) {
         return movimientoRepository.findBySustanciaIdSustancia(idSustancia);
+    }
+
+    @Override
+    public Optional<Movimiento> obtenerPorId(Long id) {
+        return movimientoRepository.findById(id);
+    }
+
+    /**
+     * ✅ Actualiza un movimiento y recalcula el stock correctamente
+     */
+    @Override
+    @Transactional
+    public Movimiento actualizarMovimiento(Movimiento movimiento) {
+        Movimiento original = movimientoRepository.findById(movimiento.getIdMovimiento())
+                .orElseThrow(() -> new IllegalArgumentException("Movimiento no encontrado"));
+
+        Sustancia sustancia = sustanciaRepository.findById(movimiento.getSustancia().getIdSustancia())
+                .orElseThrow(() -> new IllegalArgumentException("Sustancia no encontrada"));
+
+        // 🔄 Revertir el efecto del movimiento anterior
+        if (original.getTipoMovimiento() == TipoMovimiento.ENTRADA) {
+            sustancia.setStock(sustancia.getStock() - original.getCantidad());
+        } else if (original.getTipoMovimiento() == TipoMovimiento.SALIDA) {
+            sustancia.setStock(sustancia.getStock() + original.getCantidad());
+        }
+
+        // 🧮 Aplicar el nuevo movimiento
+        if (movimiento.getTipoMovimiento() == TipoMovimiento.ENTRADA) {
+            sustancia.setStock(sustancia.getStock() + movimiento.getCantidad());
+        } else if (movimiento.getTipoMovimiento() == TipoMovimiento.SALIDA) {
+            if (sustancia.getStock() < movimiento.getCantidad()) {
+                throw new IllegalArgumentException("No hay suficiente stock para realizar la salida");
+            }
+            sustancia.setStock(sustancia.getStock() - movimiento.getCantidad());
+        }
+
+        // 🔧 Actualizar campos del movimiento
+        original.setCantidad(movimiento.getCantidad());
+        original.setProcesos(movimiento.getProcesos());
+        original.setDescripcion(movimiento.getDescripcion());
+        original.setTipoMovimiento(movimiento.getTipoMovimiento());
+        original.setSustancia(movimiento.getSustancia());
+        original.setFechaMovimiento(LocalDate.now());
+        original.setStockPosterior(sustancia.getStock());
+
+        // 💾 Guardar cambios
+        sustanciaRepository.save(sustancia);
+        return movimientoRepository.save(original);
     }
 }
