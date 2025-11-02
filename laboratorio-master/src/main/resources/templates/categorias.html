@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>Categorías - Laboratorio JDC</title>
@@ -19,10 +20,15 @@
         <!-- Título y botón fuera del contenido principal -->
         <div class="d-flex justify-content-between align-items-center mb-4 px-4 pt-3">
             <h2>Categorías</h2>
-            <a th:href="@{/categorias/crear}" class="btn btn-success">
-                ➕ Crear Categoría
-            </a>
+
+            <!-- Botón solo visible para SUPERADMIN -->
+            <div sec:authorize="hasRole('SUPERADMIN')">
+                <a th:href="@{/categorias/crear}" class="btn btn-success">
+                    ➕ Crear Categoría
+                </a>
+            </div>
         </div>
+
 
         <!-- Contenido principal -->
         <main class="content">

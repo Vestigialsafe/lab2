@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,22 +9,43 @@
 </head>
 <body>
 <!-- 🔹 Sidebar -->
+<!-- 🔹 Sidebar -->
 <aside th:fragment="sidebar" class="sidebar">
   <div class="sidebar-header">
     <div class="user-icon">AD</div>
-    <p>BIENVENIDO<br><span>ADMIN</span></p>
+    <p sec:authorize="isAuthenticated()">
+      BIENVENIDO<br><span sec:authentication="name">USUARIO</span>
+    </p>
   </div>
+
   <nav>
     <ul>
-      <li><a th:href="@{/dashboard}">📊 Dashboard</a></li>
-      <li><a th:href="@{/usuarios/vista}">🧑‍💻 Usuarios</a></li>
-      <li><a th:href="@{/laboratorios/vista}">🔬 Laboratorios</a></li>
-      <li><a th:href="@{/categorias/vista}">⚗️ Categorias</a></li>
-      <li><a th:href="@{/sustancias/vista}">⚗️ Sustancias</a></li>
+      <li sec:authorize="hasAnyRole('ADMIN','SUPERADMIN')">
+        <a th:href="@{/dashboard}">📊 Dashboard</a>
+      </li>
+
+      <li sec:authorize="hasRole('SUPERADMIN')">
+        <a th:href="@{/usuarios/vista}">🧑‍💻 Usuarios</a>
+      </li>
+
+      <li sec:authorize="hasRole('SUPERADMIN')">
+        <a th:href="@{/laboratorios/vista}">🔬 Laboratorios</a>
+      </li>
+
+      <li sec:authorize="hasAnyRole('ADMIN','SUPERADMIN')">
+        <a th:href="@{/categorias/vista}">⚗️ Categorías</a>
+      </li>
+
+      <li sec:authorize="hasAnyRole('ADMIN','SUPERADMIN')">
+        <a th:href="@{/sustancias/vista}">🧪 Sustancias</a>
+      </li>
 
     </ul>
   </nav>
+
 </aside>
+
+
 
 <!-- 🔹 Header -->
 <header>
@@ -33,10 +55,13 @@
     <img th:src="@{/img/loguito.png}" alt="Logo JDC" height="50">
   </a>
 
-
   <div class="acciones">
-    <span class="notificacion">🔔</span>
-    <button class="logout">Log Out</button>
+   
+
+    <!-- ✅ Formulario de logout seguro -->
+    <form th:action="@{/logout}" method="post" style="display:inline;">
+      <button type="submit" class="logout">Log Out</button>
+    </form>
   </div>
 </header>
 

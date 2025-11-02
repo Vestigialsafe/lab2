@@ -53,7 +53,7 @@
               <td th:text="${lab.idLaboratorio}"></td>
               <td th:text="${lab.nombre}"></td>
               <td th:text="${lab.sede}"></td>
-              <td th:text="${lab.encargado.nombre}"></td>
+              <td th:text="${lab.encargado.userName}"></td>
               <td>
                 <div class="cell-actions">
                   <a th:href="@{/laboratorios/editar/{id}(id=${lab.idLaboratorio})}"

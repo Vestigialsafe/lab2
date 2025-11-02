@@ -12,6 +12,7 @@ import java.util.List;
 @Controller
 @RequestMapping("/usuarios")
 public class UsuarioController {
+
     private final UsuarioService usuarioService;
 
     public UsuarioController(UsuarioService usuarioService) {
@@ -24,10 +25,11 @@ public class UsuarioController {
         return "crearUsuario";
     }
 
+    // ✅ Al guardar, el servicio cifrará automáticamente la contraseña
     @PostMapping
     public String guardarUsuario(@ModelAttribute Usuario usuario) {
         usuarioService.guardar(usuario);
-        return "redirect:/usuarios/vista"; // Redirige al listado
+        return "redirect:/usuarios/vista";
     }
 
     @GetMapping("/{id}")
@@ -49,21 +51,18 @@ public class UsuarioController {
         return usuarioService.listarTodos();
     }
 
-    // ✅ Cambio importante: ahora usamos POST para eliminar
+    // ✅ Mantenemos POST para eliminar (seguro)
     @PostMapping("/eliminar/{id}")
     public String eliminarUsuario(@PathVariable Integer id) {
         usuarioService.eliminar(id);
-        return "redirect:/usuarios/vista"; // redirige al listado
+        return "redirect:/usuarios/vista";
     }
 
     @GetMapping("/vista")
     public String vistaUsuarios(Model model) {
         List<Usuario> usuarios = usuarioService.listarTodos();
-
         model.addAttribute("usuarios", usuarios);
         model.addAttribute("totalUsuarios", usuarios.size());
-
         return "usuario";
     }
-
 }

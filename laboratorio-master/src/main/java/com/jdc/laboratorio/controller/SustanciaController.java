@@ -3,12 +3,16 @@ package com.jdc.laboratorio.controller;
 import com.jdc.laboratorio.model.Laboratorio;
 import com.jdc.laboratorio.model.SubCategoria;
 import com.jdc.laboratorio.model.Sustancia;
+import com.jdc.laboratorio.model.Usuario;
 import com.jdc.laboratorio.service.LaboratorioService;
 import com.jdc.laboratorio.service.SubCategoriaService;
 import com.jdc.laboratorio.service.SustanciasService;
+import com.jdc.laboratorio.service.UsuarioService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -25,19 +29,37 @@ public class SustanciaController {
     private final SustanciasService sustanciaService;
     private final LaboratorioService laboratorioService;
     private final SubCategoriaService subCategoriaService;
+    private final UsuarioService usuarioService;
 
     public SustanciaController(SustanciasService sustanciaService,
                                LaboratorioService laboratorioService,
-                               SubCategoriaService subCategoriaService) {
+                               SubCategoriaService subCategoriaService,
+                               UsuarioService usuarioService) {
         this.sustanciaService = sustanciaService;
         this.laboratorioService = laboratorioService;
         this.subCategoriaService = subCategoriaService;
+        this.usuarioService = usuarioService;
     }
 
-    // 📌 Listar todas las sustancias
+    // 📌 Listar todas las sustancias (según rol)
     @GetMapping("/vista")
     public String listar(Model model) {
-        model.addAttribute("sustancias", sustanciaService.listarTodas());
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Usuario usuario = usuarioService.buscarPorUserName(auth.getName())
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        List<Sustancia> sustancias;
+
+        if ("SUPERADMIN".equals(usuario.getRol())) {
+            sustancias = sustanciaService.listarTodas();
+        } else {
+            Laboratorio lab = usuario.getLaboratorio();
+            sustancias = (lab != null)
+                    ? sustanciaService.buscarPorLaboratorio(lab.getIdLaboratorio())
+                    : List.of();
+        }
+
+        model.addAttribute("sustancias", sustancias);
         model.addAttribute("titulo", "Listado de Sustancias");
         return "sustancias";
     }
@@ -48,13 +70,33 @@ public class SustanciaController {
             @RequestParam(value = "idSubCategoria", required = false) Integer idSubCategoria,
             Model model) {
 
-        model.addAttribute("sustancia", new Sustancia());
-        model.addAttribute("laboratorios", laboratorioService.listarTodos());
-        model.addAttribute("subcategorias", subCategoriaService.listarTodas());
+        // Obtener usuario autenticado
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Usuario usuario = usuarioService.buscarPorUserName(auth.getName())
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        // Crear nueva sustancia
+        Sustancia nueva = new Sustancia();
+        model.addAttribute("sustancia", nueva);
+
+        // Listar todas las subcategorías
+        List<SubCategoria> subcategorias = subCategoriaService.listarTodas();
+        model.addAttribute("subcategorias", subcategorias);
         model.addAttribute("idSubCategoriaContexto", idSubCategoria);
+
+        // Configurar laboratorios según rol
+        List<Laboratorio> laboratorios;
+        if ("SUPERADMIN".equals(usuario.getRol())) {
+            laboratorios = laboratorioService.listarTodos();
+        } else {
+            Laboratorio lab = usuario.getLaboratorio();
+            laboratorios = (lab != null) ? List.of(lab) : List.of(); // seguro ante null
+        }
+        model.addAttribute("laboratorios", laboratorios);
 
         return "crearSustancia";
     }
+
 
     // 📌 Guardar sustancia
     @PostMapping("/guardar")
@@ -66,15 +108,12 @@ public class SustanciaController {
                           @RequestParam(value = "idSubCategoriaContexto", required = false) Integer idSubCategoriaContexto,
                           RedirectAttributes redirectAttrs) throws IOException {
 
-        // Guardar documento PDF si se carga
         if (documentoFile != null && !documentoFile.isEmpty()) {
             sustancia.setDocumentacion(documentoFile.getBytes());
         }
 
-        // Asignar laboratorio
         laboratorioService.buscarPorId(idLaboratorio).ifPresent(sustancia::setLaboratorio);
 
-        // Asignar subcategorías seleccionadas
         if (subcategoriasSeleccionadas != null && !subcategoriasSeleccionadas.isEmpty()) {
             List<SubCategoria> seleccionadas = subcategoriasSeleccionadas.stream()
                     .map(id -> subCategoriaService.buscarPorId(id).orElse(null))
@@ -84,10 +123,8 @@ public class SustanciaController {
         }
 
         sustanciaService.guardar(sustancia);
-
         redirectAttrs.addFlashAttribute("mensaje", "✅ Sustancia guardada correctamente");
 
-        // Redirigir según contexto
         if (idSubCategoriaContexto != null) {
             return "redirect:/sustancias/subcategoria/" + idSubCategoriaContexto;
         } else {
@@ -114,7 +151,6 @@ public class SustanciaController {
         return "redirect:/sustancias/vista";
     }
 
-
     // 📌 Descargar documento PDF
     @GetMapping("/documento/{id}")
     public ResponseEntity<byte[]> verDocumento(@PathVariable Long id) {
@@ -127,10 +163,23 @@ public class SustanciaController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // 📌 Listar sustancias según subcategoría
+    // 📌 Listar sustancias según subcategoría (filtradas por laboratorio si aplica)
     @GetMapping("/subcategoria/{idSubCategoria}")
     public String listarPorSubcategoria(@PathVariable Integer idSubCategoria, Model model) {
-        List<Sustancia> sustancias = sustanciaService.buscarPorSubcategoria(idSubCategoria);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Usuario usuario = usuarioService.buscarPorUserName(auth.getName())
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        List<Sustancia> sustancias;
+
+        if ("SUPERADMIN".equals(usuario.getRol())) {
+            sustancias = sustanciaService.buscarPorSubcategoria(idSubCategoria);
+        } else {
+            Laboratorio lab = usuario.getLaboratorio();
+            sustancias = (lab != null)
+                    ? sustanciaService.buscarPorSubcategoriaYLaboratorio(idSubCategoria, lab.getIdLaboratorio())
+                    : List.of();
+        }
 
         model.addAttribute("sustancias", sustancias);
         model.addAttribute("idSubCategoria", idSubCategoria);

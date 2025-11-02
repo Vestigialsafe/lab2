@@ -15,6 +15,15 @@ public interface SustanciaRepository extends JpaRepository<Sustancia, Long> {
     // 🔹 Buscar por subcategoría
     List<Sustancia> findBySubcategorias_IdSubCategoria(Integer idSubCategoria);
 
+    // 🔹 Buscar sustancias por laboratorio
+    List<Sustancia> findByLaboratorio_IdLaboratorio(Integer idLaboratorio);
+
+    // 🔹 Buscar sustancias por subcategoría y laboratorio
+    List<Sustancia> findBySubcategorias_IdSubCategoriaAndLaboratorio_IdLaboratorio(
+            Integer idSubCategoria,
+            Integer idLaboratorio
+    );
+
     // 🔹 Contar sustancias próximas a vencer
     long countByFechaVencimientoBetween(LocalDate inicio, LocalDate fin);
 

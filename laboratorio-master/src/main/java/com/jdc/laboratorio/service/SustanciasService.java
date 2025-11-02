@@ -1,7 +1,6 @@
 package com.jdc.laboratorio.service;
 
 import com.jdc.laboratorio.model.Sustancia;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -14,6 +13,7 @@ public interface SustanciasService {
 
     // 🔹 Filtros y estadísticas
     List<Sustancia> buscarPorSubcategoria(Integer idSubCategoria);
+    List<Sustancia> buscarPorSubcategoriaYLaboratorio(Integer idSubCategoria, Integer idLaboratorio);
     long contarSustancias();
     long contarProximasAVencer();
     long contarAgotadas();
@@ -22,4 +22,7 @@ public interface SustanciasService {
     // 🔹 Listados específicos
     List<Sustancia> listarProximasAVencer();
     List<Sustancia> listarAgotadas();
+
+    // 🔹 Buscar sustancias por laboratorio
+    List<Sustancia> buscarPorLaboratorio(Integer idLaboratorio);
 }

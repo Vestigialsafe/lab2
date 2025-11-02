@@ -43,6 +43,11 @@ public class SustanciaServiceImpl implements SustanciasService {
     }
 
     @Override
+    public List<Sustancia> buscarPorSubcategoriaYLaboratorio(Integer idSubCategoria, Integer idLaboratorio) {
+        return sustanciaRepository.findBySubcategorias_IdSubCategoriaAndLaboratorio_IdLaboratorio(idSubCategoria, idLaboratorio);
+    }
+
+    @Override
     public long contarSustancias() {
         return sustanciaRepository.count();
     }
@@ -74,5 +79,10 @@ public class SustanciaServiceImpl implements SustanciasService {
     @Override
     public List<Sustancia> listarAgotadas() {
         return sustanciaRepository.findAgotadas();
+    }
+
+    @Override
+    public List<Sustancia> buscarPorLaboratorio(Integer idLaboratorio) {
+        return sustanciaRepository.findByLaboratorio_IdLaboratorio(idLaboratorio);
     }
 }

@@ -21,32 +21,52 @@
             <div class="box">
                 <h2 class="text-center mb-4">Registrar nuevo usuario</h2>
 
+                <!-- ✅ Formulario de registro -->
                 <form th:action="@{/usuarios}" method="post" th:object="${usuario}"
                       class="bg-white p-4 rounded shadow-sm">
+
+                    <!-- Nombre -->
                     <div class="mb-3">
                         <label for="nombre" class="form-label">Nombre</label>
                         <input type="text" id="nombre" th:field="*{nombre}" class="form-control" required />
                     </div>
 
+                    <!-- Username -->
                     <div class="mb-3">
-                        <label for="userName" class="form-label">UserName</label>
+                        <label for="userName" class="form-label">Username</label>
                         <input type="text" id="userName" th:field="*{userName}" class="form-control" required />
                     </div>
 
+                    <!-- Contraseña -->
                     <div class="mb-3">
                         <label for="contrasena" class="form-label">Contraseña</label>
                         <input type="password" id="contrasena" th:field="*{contrasena}" class="form-control" required />
+                        <div id="passwordHelp" class="form-text">La contraseña se cifrará automáticamente.</div>
                     </div>
 
+                    <!-- Rol -->
                     <div class="mb-3">
                         <label for="rol" class="form-label">Rol</label>
                         <select id="rol" th:field="*{rol}" class="form-select" required>
                             <option value="" disabled selected>Seleccione un rol</option>
-                            <option value="ADMIN">ADMIN</option>
-                            <option value="SUPERADMIN">SUPERADMIN</option>
+                            <option value="ADMIN">Administrador</option>
+                            <option value="SUPERADMIN">Superadministrador</option>
                         </select>
                     </div>
 
+                    <!-- Laboratorio (opcional) -->
+                    <div class="mb-3" id="laboratorioField" th:if="${laboratorios != null}">
+                        <label for="laboratorio" class="form-label">Laboratorio asignado</label>
+                        <select id="laboratorio" th:field="*{laboratorio}" class="form-select">
+                            <option value="" disabled selected>Seleccione un laboratorio</option>
+                            <option th:each="lab : ${laboratorios}"
+                                    th:value="${lab.idLaboratorio}"
+                                    th:text="${lab.nombre}"></option>
+                        </select>
+                        <div class="form-text">Solo se aplica si el usuario es ADMIN.</div>
+                    </div>
+
+                    <!-- Botón -->
                     <button type="submit" class="btn btn-success w-100 mt-3">Crear Usuario</button>
                 </form>
             </div>
