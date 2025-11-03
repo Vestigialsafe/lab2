@@ -73,8 +73,15 @@ public class SustanciaServiceImpl implements SustanciasService {
     public List<Sustancia> listarProximasAVencer() {
         LocalDate hoy = LocalDate.now();
         LocalDate limite = hoy.plusMonths(1);
-        return sustanciaRepository.findProximasAVencer(hoy, limite);
+
+        // Incluir tanto vencidas como próximas a vencer (hasta dentro de 1 mes)
+        return sustanciaRepository.findAll().stream()
+                .filter(s -> s.getFechaVencimiento() != null &&
+                        !s.getFechaVencimiento().isAfter(limite)) // antes o igual al límite
+                .sorted((a, b) -> a.getFechaVencimiento().compareTo(b.getFechaVencimiento()))
+                .toList();
     }
+
 
     @Override
     public List<Sustancia> listarAgotadas() {

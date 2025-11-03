@@ -22,7 +22,7 @@
 
                 <!-- ✅ Título dinámico -->
                 <h1 class="text-center mb-4"
-                    th:text="${sustancia != null} ? 'Movimientos de ' + ${sustancia.nombre} : 'Movimientos registrados'">
+                    th:text="${sustancia != null} ? 'Reporte de ' + ${sustancia.nombre} : 'Movimientos registrados'">
                 </h1>
 
                 <!-- ✅ Botones -->
@@ -30,7 +30,7 @@
                     <a th:if="${sustancia != null}"
                        th:href="@{'/movimientos/nuevo/' + ${sustancia.idSustancia}}"
                        class="btn btn-success">
-                        ➕ Nuevo Movimiento
+                        ➕ Nuevo Reporte
                     </a>
 
                     <a th:if="${sustancia == null}"
