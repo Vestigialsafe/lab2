@@ -19,7 +19,12 @@
     <main class="content">
       <h2 class="mb-4">Nueva Sustancia</h2>
 
-      <form th:action="@{/sustancias/guardar}" th:object="${sustancia}" method="post" enctype="multipart/form-data">
+      <!-- ✅ Eliminado onsubmit -->
+      <form th:action="@{/sustancias/guardar}"
+            th:object="${sustancia}"
+            method="post"
+            enctype="multipart/form-data"
+            id="formSustancia">
 
         <!-- Campo oculto para mantener el contexto de la subcategoría -->
         <input type="hidden" name="idSubCategoriaContexto" th:value="${idSubCategoriaContexto}"/>
@@ -32,7 +37,7 @@
           </div>
           <div class="col-md-3">
             <label class="form-label">Stock</label>
-            <input type="number" class="form-control" th:field="*{stock}">
+            <input type="number" class="form-control" th:field="*{stock}" required>
           </div>
           <div class="col-md-3">
             <label class="form-label">Unidad</label>
@@ -52,11 +57,11 @@
         <div class="row mb-3">
           <div class="col-md-4">
             <label class="form-label">Fecha Vencimiento</label>
-            <input type="date" class="form-control" th:field="*{fechaVencimiento}">
+            <input type="date" class="form-control" th:field="*{fechaVencimiento}" required>
           </div>
           <div class="col-md-4">
             <label class="form-label">Marca</label>
-            <input type="text" class="form-control" th:field="*{marca}">
+            <input type="text" class="form-control" th:field="*{marca}" required>
           </div>
           <div class="col-md-4">
             <label class="form-label">CAS</label>
@@ -68,11 +73,11 @@
         <div class="row mb-3">
           <div class="col-md-6">
             <label class="form-label">Pureza</label>
-            <input type="text" class="form-control" th:field="*{pureza}">
+            <input type="text" class="form-control" th:field="*{pureza}" required>
           </div>
           <div class="col-md-6">
             <label class="form-label">Documento</label>
-            <input type="file" name="documentoFile" class="form-control">
+            <input type="file" name="documentoFile" class="form-control" required>
           </div>
         </div>
 
@@ -96,18 +101,22 @@
         </div>
 
         <!-- 🔹 Selección de Subcategorías -->
-        <div class="row mb-3">
+        <div class="row mb-3 subcategorias-section">
           <div class="col-md-12">
             <label class="form-label">Subcategorías</label>
-            <div class="row row-cols-2 row-cols-md-3 g-3">
+
+            <!-- ⚠️ Mensaje de error visible -->
+            <div id="subcat-error" class="alert alert-danger d-none mt-2 text-center" role="alert">
+              ⚠️ Debes seleccionar al menos una subcategoría antes de guardar.
+            </div>
+
+            <div class="row row-cols-2 row-cols-md-3 g-3 mt-2">
               <div class="form-check text-center" th:each="sub : ${subcategorias}">
-                <!-- Checkbox -->
                 <input class="form-check-input"
                        type="checkbox"
                        name="subcategoriasSeleccionadas"
                        th:value="${sub.idSubCategoria}"
                        th:id="'subcat-' + ${sub.idSubCategoria}">
-
                 <label class="form-check-label d-block mt-1"
                        th:for="'subcat-' + ${sub.idSubCategoria}">
                   <img th:if="${sub.imagen != null}"
@@ -121,7 +130,6 @@
           </div>
         </div>
 
-
         <!-- 🔹 Botones -->
         <div class="d-flex justify-content-between">
           <a th:href="@{/categorias/vista}" class="btn btn-secondary">Cancelar</a>
@@ -134,5 +142,42 @@
     <div th:replace="layout/layout :: footer"></div>
   </div>
 </div>
+
+<!-- ✅ Validación combinada -->
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const form = document.getElementById("formSustancia");
+    const checkboxes = document.querySelectorAll("input[name='subcategoriasSeleccionadas']");
+    const errorMsg = document.getElementById("subcat-error");
+
+    form.addEventListener("submit", function (event) {
+      // 🔹 Primero deja que el navegador valide los campos "required"
+      if (!form.checkValidity()) {
+        // El navegador mostrará el tooltip ("Completa este campo")
+        return;
+      }
+
+      // 🔹 Luego validamos las subcategorías
+      const algunoMarcado = Array.from(checkboxes).some(cb => cb.checked);
+      if (!algunoMarcado) {
+        event.preventDefault();
+        errorMsg.classList.remove("d-none");
+        errorMsg.scrollIntoView({ behavior: "smooth", block: "center" });
+      } else {
+        errorMsg.classList.add("d-none");
+      }
+    });
+
+    // 🔹 Si marca alguna subcategoría, ocultamos el error
+    checkboxes.forEach(cb => {
+      cb.addEventListener("change", function () {
+        if (Array.from(checkboxes).some(c => c.checked)) {
+          errorMsg.classList.add("d-none");
+        }
+      });
+    });
+  });
+</script>
+
 </body>
 </html>
