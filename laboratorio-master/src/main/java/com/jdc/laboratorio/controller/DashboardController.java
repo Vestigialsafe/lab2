@@ -12,7 +12,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -119,4 +122,16 @@ public class DashboardController {
 
         return "dashboard";
     }
+    // 🚀 Nuevo: eliminar directamente desde el dashboard (sin validaciones)
+    @PostMapping("/eliminarDashboard/{id}")
+    public String eliminarDesdeDashboard(@PathVariable Long id, RedirectAttributes redirect) {
+        try {
+            sustanciaService.eliminarDirecto(id);
+            redirect.addFlashAttribute("mensaje", "🗑 Sustancia vencida eliminada correctamente.");
+        } catch (Exception e) {
+            redirect.addFlashAttribute("error", "⚠️ No se pudo eliminar la sustancia vencida.");
+        }
+        return "redirect:/dashboard";
+    }
+
 }

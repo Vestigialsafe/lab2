@@ -1,8 +1,10 @@
 package com.jdc.laboratorio.service;
 
 import com.jdc.laboratorio.model.Sustancia;
+import com.jdc.laboratorio.repository.MovimientoRepository;
 import com.jdc.laboratorio.repository.SustanciaRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -12,9 +14,12 @@ import java.util.Optional;
 public class SustanciaServiceImpl implements SustanciasService {
 
     private final SustanciaRepository sustanciaRepository;
+    private final MovimientoRepository movimientoRepository;
 
-    public SustanciaServiceImpl(SustanciaRepository sustanciaRepository) {
+    public SustanciaServiceImpl(SustanciaRepository sustanciaRepository,
+                                MovimientoRepository movimientoRepository) {
         this.sustanciaRepository = sustanciaRepository;
+        this.movimientoRepository = movimientoRepository;
     }
 
     @Override
@@ -32,9 +37,25 @@ public class SustanciaServiceImpl implements SustanciasService {
         return sustanciaRepository.save(sustancia);
     }
 
+    // 🔹 Método con validación normal (no elimina si hay movimientos)
     @Override
     public void eliminar(Long id) {
-        sustanciaRepository.deleteById(id);
+        Sustancia s = sustanciaRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Sustancia no encontrada"));
+        if (!movimientoRepository.findBySustanciaIdSustancia(s.getIdSustancia()).isEmpty()) {
+            throw new IllegalStateException("No se puede eliminar porque tiene movimientos.");
+        }
+        sustanciaRepository.delete(s);
+    }
+
+    // 🔹 Método forzado desde el dashboard (sí elimina movimientos)
+    @Override
+    @Transactional
+    public void eliminarDirecto(Long id) {
+        Sustancia s = sustanciaRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Sustancia no encontrada"));
+        movimientoRepository.deleteAllBySustancia(s);
+        sustanciaRepository.delete(s);
     }
 
     @Override
@@ -74,14 +95,13 @@ public class SustanciaServiceImpl implements SustanciasService {
         LocalDate hoy = LocalDate.now();
         LocalDate limite = hoy.plusMonths(1);
 
-        // Incluir tanto vencidas como próximas a vencer (hasta dentro de 1 mes)
+        // Incluye vencidas y próximas (hasta dentro de 1 mes)
         return sustanciaRepository.findAll().stream()
                 .filter(s -> s.getFechaVencimiento() != null &&
-                        !s.getFechaVencimiento().isAfter(limite)) // antes o igual al límite
+                        !s.getFechaVencimiento().isAfter(limite))
                 .sorted((a, b) -> a.getFechaVencimiento().compareTo(b.getFechaVencimiento()))
                 .toList();
     }
-
 
     @Override
     public List<Sustancia> listarAgotadas() {

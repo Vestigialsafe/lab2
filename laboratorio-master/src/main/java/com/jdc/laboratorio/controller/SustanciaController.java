@@ -70,33 +70,28 @@ public class SustanciaController {
             @RequestParam(value = "idSubCategoria", required = false) Integer idSubCategoria,
             Model model) {
 
-        // Obtener usuario autenticado
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Usuario usuario = usuarioService.buscarPorUserName(auth.getName())
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-        // Crear nueva sustancia
         Sustancia nueva = new Sustancia();
         model.addAttribute("sustancia", nueva);
 
-        // Listar todas las subcategorías
         List<SubCategoria> subcategorias = subCategoriaService.listarTodas();
         model.addAttribute("subcategorias", subcategorias);
         model.addAttribute("idSubCategoriaContexto", idSubCategoria);
 
-        // Configurar laboratorios según rol
         List<Laboratorio> laboratorios;
         if ("SUPERADMIN".equals(usuario.getRol())) {
             laboratorios = laboratorioService.listarTodos();
         } else {
             Laboratorio lab = usuario.getLaboratorio();
-            laboratorios = (lab != null) ? List.of(lab) : List.of(); // seguro ante null
+            laboratorios = (lab != null) ? List.of(lab) : List.of();
         }
         model.addAttribute("laboratorios", laboratorios);
 
         return "crearSustancia";
     }
-
 
     // 📌 Guardar sustancia
     @PostMapping("/guardar")
@@ -132,7 +127,7 @@ public class SustanciaController {
         }
     }
 
-    // 📌 Eliminar sustancia
+    // 📌 Eliminar sustancia (con validaciones)
     @GetMapping("/eliminar/{id}")
     public String eliminar(@PathVariable Long id,
                            @RequestParam(value = "subcat", required = false) Integer idSubCategoria,
@@ -151,6 +146,18 @@ public class SustanciaController {
         return "redirect:/sustancias/vista";
     }
 
+    // 🚀 Nuevo: eliminar directamente desde el dashboard (sin validaciones)
+    @PostMapping("/eliminarDashboard/{id}")
+    public String eliminarDesdeDashboard(@PathVariable Long id, RedirectAttributes redirect) {
+        try {
+            sustanciaService.eliminarDirecto(id);
+            redirect.addFlashAttribute("mensaje", "🗑 Sustancia vencida eliminada correctamente.");
+        } catch (Exception e) {
+            redirect.addFlashAttribute("error", "⚠️ No se pudo eliminar la sustancia vencida.");
+        }
+        return "redirect:/dashboard";
+    }
+
     // 📌 Descargar documento PDF
     @GetMapping("/documento/{id}")
     public ResponseEntity<byte[]> verDocumento(@PathVariable Long id) {
@@ -163,7 +170,7 @@ public class SustanciaController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // 📌 Listar sustancias según subcategoría (filtradas por laboratorio si aplica)
+    // 📌 Listar sustancias según subcategoría
     @GetMapping("/subcategoria/{idSubCategoria}")
     public String listarPorSubcategoria(@PathVariable Integer idSubCategoria, Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();

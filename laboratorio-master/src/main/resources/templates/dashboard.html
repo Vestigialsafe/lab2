@@ -22,7 +22,7 @@
   <div class="main-section">
     <div th:replace="layout/layout :: header"></div>
 
-    <main class="content  py-4">
+    <main class="content py-4">
       <h2 class="dashboard-header text-center mb-4">📊 Panel de Control del Laboratorio</h2>
 
       <!-- Indicadores principales -->
@@ -53,53 +53,66 @@
             </div>
           </div>
         </div>
+      </div>
 
-        <!-- ⚠ Sustancias próximas a vencer -->
-        <div class="row mt-5">
-          <div class="col-md-12">
-            <div class="card shadow-sm">
-              <div class="card-header bg-warning text-dark">
-                <h5 class="mb-0">⚠ Sustancias Próximas o Vencidas (últimos y próximos 30 días)</h5>
-              </div>
-              <div class="card-body p-0">
-                <div class="table-responsive">
-                  <table class="table table-striped table-hover mb-0">
-                    <thead class="table-light">
-                    <tr>
-                      <th>#</th>
-                      <th>Nombre</th>
-                      <th>Fecha de Vencimiento</th>
-                      <th>Estado</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr th:each="s, iterStat : ${listaProximas}">
-                      <td th:text="${iterStat.index + 1}"></td>
-                      <td th:text="${s.nombre}"></td>
-                      <td th:text="${s.fechaVencimiento}"></td>
-                      <td>
-                  <span th:if="${s.fechaVencimiento.isAfter(T(java.time.LocalDate).now())}"
-                        th:text="${T(java.time.temporal.ChronoUnit).DAYS.between(T(java.time.LocalDate).now(), s.fechaVencimiento)} + ' días restantes'"
-                        class="text-dark fw-semibold"></span>
-                        <span th:if="${s.fechaVencimiento.isEqual(T(java.time.LocalDate).now())}"
-                              class="text-warning fw-bold">VENCE HOY</span>
-                        <span th:if="${s.fechaVencimiento.isBefore(T(java.time.LocalDate).now())}"
-                              class="text-danger fw-bold">VENCIDA</span>
-                      </td>
-                    </tr>
-                    <tr th:if="${#lists.isEmpty(listaProximas)}">
-                      <td colspan="4" class="text-center text-muted py-3">✅ No hay sustancias próximas a vencer ni vencidas.</td>
-                    </tr>
-                    </tbody>
-                  </table>
-                </div>
+      <!-- ⚠ Sustancias próximas a vencer -->
+      <div class="row mt-5">
+        <div class="col-md-12">
+          <div class="card shadow-sm">
+            <div class="card-header bg-warning text-dark">
+              <h5 class="mb-0">⚠ Sustancias Próximas a Vencer o Vencidas (últimos y próximos 30 días)</h5>
+            </div>
+            <div class="card-body p-0">
+              <div class="table-responsive">
+                <table class="table table-striped table-hover mb-0">
+                  <thead class="table-light">
+                  <tr>
+                    <th>#</th>
+                    <th>Nombre</th>
+                    <th>Fecha de Vencimiento</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr th:each="s, iterStat : ${listaProximas}">
+                    <td th:text="${iterStat.index + 1}"></td>
+                    <td th:text="${s.nombre}"></td>
+                    <td th:text="${s.fechaVencimiento}"></td>
+                    <td>
+                        <span th:if="${s.fechaVencimiento.isAfter(T(java.time.LocalDate).now())}"
+                              th:text="${T(java.time.temporal.ChronoUnit).DAYS.between(T(java.time.LocalDate).now(), s.fechaVencimiento)} + ' días restantes'"
+                              class="text-dark fw-semibold"></span>
+                      <span th:if="${s.fechaVencimiento.isEqual(T(java.time.LocalDate).now())}"
+                            class="text-warning fw-bold">VENCE HOY</span>
+                      <span th:if="${s.fechaVencimiento.isBefore(T(java.time.LocalDate).now())}"
+                            class="text-danger fw-bold">VENCIDA</span>
+                    </td>
+                    <td>
+                      <form th:if="${s.fechaVencimiento.isBefore(T(java.time.LocalDate).now())}"
+                            th:action="@{/sustancias/eliminarDashboard/{id}(id=${s.idSustancia})}"
+                            method="post"
+                            onsubmit="return confirm('¿Seguro que deseas eliminar esta sustancia vencida?');">
+                        <button type="submit" class="btn btn-danger btn-sm">
+                          🗑 Eliminar
+                        </button>
+                      </form>
+                    </td>
+                  </tr>
+                  <tr th:if="${#lists.isEmpty(listaProximas)}">
+                    <td colspan="5" class="text-center text-muted py-3">
+                      ✅ No hay sustancias próximas a vencer ni vencidas.
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
         </div>
+      </div>
 
-
-        <!-- 🚫 Sustancias agotadas -->
+      <!-- 🚫 Sustancias agotadas -->
       <div class="row mt-5">
         <div class="col-md-12">
           <div class="card shadow-sm">

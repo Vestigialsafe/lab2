@@ -9,9 +9,10 @@ public interface SustanciasService {
     List<Sustancia> listarTodas();
     Optional<Sustancia> buscarPorId(Long id);
     Sustancia guardar(Sustancia sustancia);
-    void eliminar(Long id);
 
-    // 🔹 Filtros y estadísticas
+    void eliminar(Long id);              // Validado
+    void eliminarDirecto(Long id);       // Forzado
+
     List<Sustancia> buscarPorSubcategoria(Integer idSubCategoria);
     List<Sustancia> buscarPorSubcategoriaYLaboratorio(Integer idSubCategoria, Integer idLaboratorio);
     long contarSustancias();
@@ -19,10 +20,8 @@ public interface SustanciasService {
     long contarAgotadas();
     List<Object[]> contarPorCategoria();
 
-    // 🔹 Listados específicos
     List<Sustancia> listarProximasAVencer();
     List<Sustancia> listarAgotadas();
 
-    // 🔹 Buscar sustancias por laboratorio
     List<Sustancia> buscarPorLaboratorio(Integer idLaboratorio);
 }
