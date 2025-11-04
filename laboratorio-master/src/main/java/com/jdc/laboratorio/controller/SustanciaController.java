@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 
 @Controller
@@ -127,7 +128,97 @@ public class SustanciaController {
         }
     }
 
-    // 📌 Eliminar sustancia (con validaciones)
+    // 📌 Mostrar formulario para editar una sustancia existente
+    @GetMapping("/editar/{id}")
+    public String mostrarFormularioEditar(@PathVariable Long id, Model model) {
+        Sustancia sustancia = sustanciaService.buscarPorId(id)
+                .orElseThrow(() -> new RuntimeException("Sustancia no encontrada"));
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Usuario usuario = usuarioService.buscarPorUserName(auth.getName())
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        List<SubCategoria> subcategorias = subCategoriaService.listarTodas();
+        List<Laboratorio> laboratorios;
+
+        if ("SUPERADMIN".equals(usuario.getRol())) {
+            laboratorios = laboratorioService.listarTodos();
+        } else {
+            Laboratorio lab = usuario.getLaboratorio();
+            laboratorios = (lab != null) ? List.of(lab) : List.of();
+        }
+
+        model.addAttribute("sustancia", sustancia);
+        model.addAttribute("subcategorias", subcategorias);
+        model.addAttribute("laboratorios", laboratorios);
+
+        return "editarSustancia";
+    }
+
+    // 📌 Actualizar sustancia completa
+    @PostMapping("/actualizar/{id}")
+    public String actualizar(@PathVariable Long id,
+                             @ModelAttribute Sustancia sustanciaActualizada,
+                             @RequestParam(value = "documentoFile", required = false) MultipartFile documentoFile,
+                             @RequestParam("idLaboratorio") Integer idLaboratorio,
+                             @RequestParam(value = "subcategoriasSeleccionadas", required = false) List<Integer> subcategoriasSeleccionadas,
+                             RedirectAttributes redirectAttrs) throws IOException {
+
+        Sustancia sustancia = sustanciaService.buscarPorId(id)
+                .orElseThrow(() -> new RuntimeException("Sustancia no encontrada"));
+
+        sustancia.setNombre(sustanciaActualizada.getNombre());
+        sustancia.setStock(sustanciaActualizada.getStock());
+        sustancia.setUnidad(sustanciaActualizada.getUnidad());
+        sustancia.setFechaVencimiento(sustanciaActualizada.getFechaVencimiento());
+        sustancia.setMarca(sustanciaActualizada.getMarca());
+        sustancia.setCas(sustanciaActualizada.getCas());
+        sustancia.setPureza(sustanciaActualizada.getPureza());
+        sustancia.setEnvaseOriginal(sustanciaActualizada.getEnvaseOriginal());
+
+        if (documentoFile != null && !documentoFile.isEmpty()) {
+            sustancia.setDocumentacion(documentoFile.getBytes());
+        }
+
+        laboratorioService.buscarPorId(idLaboratorio).ifPresent(sustancia::setLaboratorio);
+
+        if (subcategoriasSeleccionadas != null && !subcategoriasSeleccionadas.isEmpty()) {
+            List<SubCategoria> seleccionadas = subcategoriasSeleccionadas.stream()
+                    .map(idSub -> subCategoriaService.buscarPorId(idSub).orElse(null))
+                    .filter(sc -> sc != null)
+                    .toList();
+            sustancia.setSubcategorias(seleccionadas);
+        }
+
+        sustanciaService.guardar(sustancia);
+        redirectAttrs.addFlashAttribute("mensaje", "✅ Sustancia actualizada correctamente");
+
+        return "redirect:/sustancias/vista";
+    }
+
+    // 📅 Mostrar formulario para editar solo la fecha
+    @GetMapping("/editar-fecha/{id}")
+    public String mostrarFormularioEditarFecha(@PathVariable Long id, Model model) {
+        Sustancia sustancia = sustanciaService.buscarPorId(id)
+                .orElseThrow(() -> new RuntimeException("Sustancia no encontrada"));
+        model.addAttribute("sustancia", sustancia);
+        return "editarSustancia"; // vista Thymeleaf que contendrá solo el campo de fecha
+    }
+
+    // 📅 Actualizar solo la fecha de vencimiento
+    @PostMapping("/actualizar-fecha/{id}")
+    public String actualizarFecha(@PathVariable Long id,
+                                  @RequestParam("fechaVencimiento") LocalDate fechaVencimiento,
+                                  RedirectAttributes redirectAttrs) {
+        Sustancia sustancia = sustanciaService.buscarPorId(id)
+                .orElseThrow(() -> new RuntimeException("Sustancia no encontrada"));
+        sustancia.setFechaVencimiento(fechaVencimiento);
+        sustanciaService.guardar(sustancia);
+        redirectAttrs.addFlashAttribute("mensaje", "📅 Fecha de vencimiento actualizada correctamente");
+        return "redirect:/sustancias/vista";
+    }
+
+    // 📌 Eliminar sustancia
     @GetMapping("/eliminar/{id}")
     public String eliminar(@PathVariable Long id,
                            @RequestParam(value = "subcat", required = false) Integer idSubCategoria,
@@ -146,19 +237,7 @@ public class SustanciaController {
         return "redirect:/sustancias/vista";
     }
 
-    // 🚀 Nuevo: eliminar directamente desde el dashboard (sin validaciones)
-    @PostMapping("/eliminarDashboard/{id}")
-    public String eliminarDesdeDashboard(@PathVariable Long id, RedirectAttributes redirect) {
-        try {
-            sustanciaService.eliminarDirecto(id);
-            redirect.addFlashAttribute("mensaje", "🗑 Sustancia vencida eliminada correctamente.");
-        } catch (Exception e) {
-            redirect.addFlashAttribute("error", "⚠️ No se pudo eliminar la sustancia vencida.");
-        }
-        return "redirect:/dashboard";
-    }
-
-    // 📌 Descargar documento PDF
+    // 📄 Descargar documento PDF
     @GetMapping("/documento/{id}")
     public ResponseEntity<byte[]> verDocumento(@PathVariable Long id) {
         return sustanciaService.buscarPorId(id)
@@ -170,7 +249,7 @@ public class SustanciaController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // 📌 Listar sustancias según subcategoría
+    // 📋 Listar sustancias por subcategoría
     @GetMapping("/subcategoria/{idSubCategoria}")
     public String listarPorSubcategoria(@PathVariable Integer idSubCategoria, Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();

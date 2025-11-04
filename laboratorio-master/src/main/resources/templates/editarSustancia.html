@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Fecha de Sustancia</title>
+    <link rel="stylesheet" th:href="@{/css/layoutStyle.css}">
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+</head>
+<body>
+
+<div class="container mt-5">
+    <div class="card shadow-lg border-0 rounded-4">
+        <div class="card-header bg-primary text-white text-center">
+            <h3>📅 Editar Fecha de Vencimiento</h3>
+        </div>
+
+        <div class="card-body">
+            <form th:action="@{'/sustancias/actualizar-fecha/' + ${sustancia.idSustancia}}" method="post">
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Nombre de la Sustancia:</label>
+                    <input type="text" th:value="${sustancia.nombre}" class="form-control" readonly>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Fecha de Vencimiento Actual:</label>
+                    <input type="text" th:value="${#temporals.format(sustancia.fechaVencimiento, 'yyyy-MM-dd')}" class="form-control" readonly>
+                </div>
+
+                <div class="mb-3">
+                    <label for="fechaVencimiento" class="form-label fw-bold text-danger">Nueva Fecha de Vencimiento:</label>
+                    <input type="date" id="fechaVencimiento" name="fechaVencimiento" class="form-control" required>
+                </div>
+
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-success px-4 me-2">💾 Guardar Cambios</button>
+                    <a th:href="@{/sustancias/vista}" class="btn btn-secondary px-4">↩ Volver</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>
