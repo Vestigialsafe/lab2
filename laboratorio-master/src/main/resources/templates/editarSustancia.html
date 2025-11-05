@@ -4,39 +4,61 @@
     <meta charset="UTF-8">
     <title>Editar Fecha de Sustancia</title>
     <link rel="stylesheet" th:href="@{/css/layoutStyle.css}">
-    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
+<div class="layout">
+    <!-- Sidebar -->
+    <div th:replace="layout/layout :: sidebar"></div>
 
-<div class="container mt-5">
-    <div class="card shadow-lg border-0 rounded-4">
-        <div class="card-header bg-primary text-white text-center">
-            <h3>📅 Editar Fecha de Vencimiento</h3>
-        </div>
+    <div class="main-section">
+        <!-- Header -->
+        <div th:replace="layout/layout :: header"></div>
 
-        <div class="card-body">
-            <form th:action="@{'/sustancias/actualizar-fecha/' + ${sustancia.idSustancia}}" method="post">
-                <div class="mb-3">
-                    <label class="form-label fw-bold">Nombre de la Sustancia:</label>
-                    <input type="text" th:value="${sustancia.nombre}" class="form-control" readonly>
+        <!-- Contenido principal -->
+        <main class="content">
+            <h2 class="mb-4 text-primary text-center">📅 Editar Fecha de Vencimiento</h2>
+
+            <form th:action="@{'/sustancias/actualizar-fecha/' + ${sustancia.idSustancia}}" method="post" class="mt-4">
+
+                <div class="card shadow-sm border-0 rounded-4">
+                    <div class="card-body">
+
+                        <!-- Nombre de Sustancia -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Nombre de la Sustancia</label>
+                            <input type="text" class="form-control" th:value="${sustancia.nombre}" readonly>
+                        </div>
+
+                        <!-- Fecha de Vencimiento Actual -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Fecha de Vencimiento Actual</label>
+                            <input type="text"
+                                   class="form-control"
+                                   th:value="${#temporals.format(sustancia.fechaVencimiento, 'yyyy-MM-dd')}"
+                                   readonly>
+                        </div>
+
+                        <!-- Nueva Fecha -->
+                        <div class="mb-3">
+                            <label for="fechaVencimiento" class="form-label fw-bold text-danger">Nueva Fecha de Vencimiento</label>
+                            <input type="date" id="fechaVencimiento" name="fechaVencimiento" class="form-control" required>
+                        </div>
+
+                        <!-- Botones -->
+                        <div class="d-flex justify-content-between mt-4">
+                            <a th:href="@{/sustancias/vista}" class="btn btn-secondary">↩ Volver</a>
+                            <button type="submit" class="btn btn-success">💾 Guardar Cambios</button>
+                        </div>
+
+                    </div>
                 </div>
 
-                <div class="mb-3">
-                    <label class="form-label fw-bold">Fecha de Vencimiento Actual:</label>
-                    <input type="text" th:value="${#temporals.format(sustancia.fechaVencimiento, 'yyyy-MM-dd')}" class="form-control" readonly>
-                </div>
-
-                <div class="mb-3">
-                    <label for="fechaVencimiento" class="form-label fw-bold text-danger">Nueva Fecha de Vencimiento:</label>
-                    <input type="date" id="fechaVencimiento" name="fechaVencimiento" class="form-control" required>
-                </div>
-
-                <div class="text-center mt-4">
-                    <button type="submit" class="btn btn-success px-4 me-2">💾 Guardar Cambios</button>
-                    <a th:href="@{/sustancias/vista}" class="btn btn-secondary px-4">↩ Volver</a>
-                </div>
             </form>
-        </div>
+        </main>
+
+        <!-- Footer -->
+        <div th:replace="layout/layout :: footer"></div>
     </div>
 </div>
 
