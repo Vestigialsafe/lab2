@@ -1,99 +1,231 @@
-/* Contenedor del estante */
+
+
+/* ===== ESTANTE ===== */
 .estante {
     width: 90%;
-    margin: auto;
-    padding: 20px;
-    background: #e6e6e6; /* más claro para resaltar */
-    border: 5px solid #444;
-    border-radius: 12px;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+    margin: 40px auto;
+    padding: 40px;
+    background: linear-gradient(180deg, #f0f4f9 0%, #cfd9e4 100%);
+    border-radius: 20px;
+    border: 2px solid rgba(100, 120, 150, 0.4);
+    box-shadow:
+            inset 0 0 40px rgba(255, 255, 255, 0.4),
+            0 15px 35px rgba(0, 0, 0, 0.35);
+    position: relative;
+    overflow: hidden;
 }
 
-/* Cada repisa */
+/* Luz superior del estante */
+.estante::before {
+    content: "";
+    position: absolute;
+    top: -20px;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    background: radial-gradient(circle at 50% 0%, rgba(255,255,255,0.6), transparent 70%);
+    filter: blur(10px);
+    pointer-events: none;
+}
+
+/* ===== REPISAS ===== */
 .repisa {
     display: flex;
     justify-content: space-evenly;
     align-items: flex-end;
-    background: linear-gradient(180deg, #a47148 0%, #6b3f21 100%); /* madera más viva */
-    margin: 20px 0;
-    padding: 20px 0;
-    border-top: 5px solid #4a2a14;
-    border-bottom: 5px solid #4a2a14;
-    border-radius: 6px;
-    box-shadow: inset 0 -4px 10px rgba(0,0,0,0.2);
+    background: linear-gradient(180deg, #8a5a33 0%, #3b1f0d 95%);
+    border-top: 5px solid #5d3416;
+    border-bottom: 5px solid #2a1508;
+    margin: 50px 0;
+    padding: 40px 0;
+    border-radius: 12px;
+    box-shadow:
+            inset 0 -6px 12px rgba(0, 0, 0, 0.5),
+            0 8px 25px rgba(0, 0, 0, 0.5);
 }
 
-/* Frasco visual */
+/* ===== MATRAZ ERLENMEYER REALISTA ===== */
 .frasco {
-    width: 75px;
-    height: 110px;
-    background: linear-gradient(to top, #10131a, #3c4a5a);
-    border-radius: 18px 18px 6px 6px;
     position: relative;
-    margin: 0 auto;
+    width: 140px;
+    height: 180px;
+    background: rgba(140, 200, 255, 0.12);
+    border: 2px solid rgba(255, 255, 255, 0.25);
+    border-radius: 10px;
+    overflow: hidden;
     cursor: pointer;
-    transition: transform 0.25s ease-in-out, box-shadow 0.25s ease-in-out;
-    box-shadow: 0 6px 15px rgba(0,0,0,0.4);
+    backdrop-filter: blur(10px);
+    box-shadow:
+            inset 0 0 40px rgba(255, 255, 255, 0.15),
+            0 10px 20px rgba(0, 0, 0, 0.5);
+    clip-path: polygon(
+            20% 0%, 80% 0%,
+            65% 20%, 95% 100%,
+            5% 100%, 35% 20%
+    );
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.frasco:hover {
-    transform: scale(1.15);
-    background: linear-gradient(to top, #223040, #4a6075);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.6);
-}
-
-/* Tapa del frasco */
-.frasco::before {
+/* Cuello del matraz */
+.frasco::after {
     content: "";
-    width: 42px;
-    height: 20px;
-    background: #bbb;
-    border-radius: 10px 10px 0 0;
     position: absolute;
-    top: -15px;
+    top: -28px;
     left: 50%;
     transform: translateX(-50%);
-    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    width: 38px;
+    height: 28px;
+    background: linear-gradient(to bottom, #e5e5e5, #707070);
+    border-radius: 8px 8px 2px 2px;
+    box-shadow: inset 0 3px 5px rgba(0,0,0,0.4);
 }
 
-/* Nombre debajo del frasco */
+/* Brillo lateral */
+.frasco::before {
+    content: "";
+    position: absolute;
+    top: 10%;
+    left: 18%;
+    width: 14%;
+    height: 75%;
+    background: linear-gradient(to right, rgba(255,255,255,0.6), transparent 80%);
+    border-radius: 50px;
+    filter: blur(1px);
+}
+
+/* Líquido interno */
+.frasco .liquido {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 55%;
+    background: linear-gradient(
+            to top,
+            rgba(0, 140, 255, 0.85) 0%,
+            rgba(0, 210, 255, 0.5) 80%
+    );
+    border-top: 2px solid rgba(255,255,255,0.4);
+    box-shadow: inset 0 8px 20px rgba(255,255,255,0.25);
+    clip-path: polygon(8% 100%, 92% 100%, 70% 35%, 30% 35%);
+    animation: movimiento 4s ease-in-out infinite;
+}
+
+/* Movimiento del líquido */
+@keyframes movimiento {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-2px) rotate(1deg); }
+}
+
+/* Hover efecto */
+.frasco:hover {
+    transform: translateY(-10px) scale(1.05);
+    box-shadow:
+            0 10px 25px rgba(0,0,0,0.6),
+            inset 0 0 50px rgba(255,255,255,0.4);
+}
+
+/* Reflejo del cuello */
+.frasco .cuello-brillo {
+    position: absolute;
+    top: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 42px;
+    height: 10px;
+    background: radial-gradient(circle at center, rgba(255,255,255,0.9), transparent);
+    border-radius: 50%;
+    opacity: 0.7;
+}
+
+/* ===== NOMBRE DE SUSTANCIA ===== */
 .nombre-sustancia {
-    margin-top: 8px;
-    font-weight: bold;
-    color: #ffffff;
+    margin-top: 12px;
+    font-weight: 600;
+    color: #f0f8ff;
     text-align: center;
-    font-size: 0.9rem;
+    font-size: 0.95rem;
+    text-shadow: 0 2px 6px rgba(0,0,0,0.9);
 }
 
-/* Título principal */
-h2 {
-    font-size: 1.8rem;
-    font-weight: bold;
-    text-transform: uppercase;
-    color: #2c3e50;
-    text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+/* ===== TÍTULO Y BOTÓN ===== */
+.content .d-flex {
+    display: flex;
+    justify-content: space-between;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(8px);
+    border-radius: 16px;
+    padding: 18px 35px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    width: 100%;
+    max-width: 900px;
+    animation: fadeIn 0.8s ease;
 }
 
+.content h2 {
+    font-family: "Poppins", sans-serif;
+    font-size: 1.9rem;
+    font-weight: 700;
+    color: #0d2850;
+    letter-spacing: 0.5px;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.content h2::before {
+    content: "🧪";
+    font-size: 1.6rem;
+}
+
+/* Botón */
+.btn-primary {
+    background: linear-gradient(135deg, #007bff, #00bfff);
+    border: none;
+    border-radius: 12px;
+    padding: 10px 18px;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+    box-shadow: 0 4px 10px rgba(0, 136, 255, 0.3);
+    transition: all 0.25s ease;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px) scale(1.05);
+    background: linear-gradient(135deg, #00a3ff, #00e0ff);
+    box-shadow: 0 6px 14px rgba(0, 180, 255, 0.5);
+}
+
+/* ===== MODALES ===== */
+.modal-content {
+    background: #f8fbff;
+    border-radius: 18px;
+    border: 2px solid #0d2850;
+    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.45);
+}
+
+/* ===== SUBCATEGORÍAS ===== */
 .subcat-icon {
-    width: 45px;
-    height: 45px;
+    width: 55px;
+    height: 55px;
     display: flex;
     justify-content: center;
     align-items: center;
-    background: #f8f9fa;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    padding: 3px;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    background: linear-gradient(145deg, #fafafa, #e0e0e0);
+    border: 1px solid #bbb;
+    border-radius: 12px;
+    padding: 5px;
+    transition: all 0.2s ease-in-out;
 }
 
 .subcat-icon:hover {
-    transform: scale(1.1);
-    box-shadow: 0 0 6px rgba(0,0,0,0.2);
+    transform: scale(1.12);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.25);
 }
 
 .subcat-img {
-    width: 50px;
-    height: 50px;
+    width: 45px;
+    height: 45px;
     object-fit: contain;
 }

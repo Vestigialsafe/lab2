@@ -2,19 +2,54 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Iniciar sesión</title>
+    <title>Iniciar sesión - JDC</title>
+    <link rel="stylesheet" th:href="@{/css/login.css}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 </head>
-<body>
-<h2>Iniciar sesión</h2>
-<form th:action="@{/login}" method="post">
-    <label>Usuario:</label><br>
-    <input type="text" name="username" required><br>
-    <label>Contraseña:</label><br>
-    <input type="password" name="password" required><br><br>
-    <button type="submit">Entrar</button>
-</form>
 
-<p th:if="${param.error}" style="color:red;">Usuario o contraseña incorrectos</p>
-<p th:if="${param.logout}" style="color:green;">Sesión cerrada correctamente</p>
+<body>
+<div class="login-wrapper">
+
+    <!-- Sección izquierda con imagen -->
+    <div class="left-image"></div>
+
+    <!-- Panel derecho -->
+    <div class="right-panel">
+        <div class="panel-content">
+
+            <img th:src="@{/img/logo_claro.png}" alt="Logo JDC" class="logo">
+            <h2 class="title">
+                Bienvenido al laboratorio<br><strong>JDC</strong>
+            </h2>
+
+            <form th:action="@{/login}" method="post">
+
+                <div class="input-group">
+                    <i class="icon user"></i>
+                    <input type="text" name="username" placeholder="Usuario" required>
+                </div>
+
+                <div class="input-group">
+                    <i class="icon lock"></i>
+                    <input type="password" name="password" placeholder="Contraseña" required>
+                </div>
+
+                <div class="remember">
+                    <input type="checkbox" id="remember" name="remember">
+                    <label for="remember">Recuérdame</label>
+                </div>
+
+                <button type="submit" class="btn-login">Iniciar Sesión</button>
+            </form>
+
+            <p th:if="${param.error}" class="error">Usuario o contraseña incorrectos</p>
+            <p th:if="${param.logout}" class="logout">Sesión cerrada correctamente</p>
+
+        </div>
+    </div>
+
+</div>
 </body>
 </html>

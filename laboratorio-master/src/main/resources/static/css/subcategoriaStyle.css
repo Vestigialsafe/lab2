@@ -24,7 +24,7 @@
     backdrop-filter: blur(8px);
     border-radius: 16px;
     padding: 18px 35px;
-    margin-bottom: 50px;
+    margin-bottom: 40px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     width: 100%;
     max-width: 1100px;
@@ -39,11 +39,6 @@
     display: flex;
     align-items: center;
     gap: 10px;
-}
-
-.page-header h2::before {
-    content: "📂";
-    font-size: 1.8rem;
 }
 
 .page-header .btn-create {
@@ -68,75 +63,78 @@
     box-shadow: 0 6px 14px rgba(0,0,0,0.25);
 }
 
-/* === Contenedor de categorías === */
+/* === Alertas === */
+.alert-container {
+    width: 100%;
+    max-width: 800px;
+}
+
+/* === Tarjetas === */
 .categorias-box {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
     gap: 40px;
     width: 100%;
-    max-width: 1200px;
+    max-width: 1100px;
 }
 
-/* === Tarjeta === */
 .categoria-card {
-    background: rgba(255,255,255,0.9);
+    background: rgba(255,255,255,0.95);
     border-radius: 18px;
-    padding: 30px 25px;
+    padding: 25px;
     width: 280px;
-    height: 280px;
+    min-height: 280px;
     text-align: center;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    transition: all 0.3s ease;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    justify-content: flex-start;
     align-items: center;
 }
 
 .categoria-card:hover {
-    transform: translateY(-8px) scale(1.03);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+    transform: translateY(-6px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.25);
 }
 
 .categoria-card img {
-    width: 130px;
-    height: 130px;
+    width: 120px;
+    height: 120px;
     object-fit: contain;
     margin-bottom: 15px;
-    transition: transform 0.3s ease;
-}
-
-.categoria-card:hover img {
-    transform: scale(1.1);
 }
 
 .categoria-card h5 {
     font-size: 1.1rem;
     font-weight: 600;
-    color: #1a1a1a;
-    margin: 0;
+    color: #002b5b;
+    margin-bottom: 6px;
 }
 
-.categoria-link {
-    text-decoration: none;
-    color: inherit;
+.categoria-card small {
+    font-size: 0.85rem;
+    color: #555;
+}
+
+.card-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.btn-info {
+    background-color: #36d1dc;
+    border: none;
+}
+
+.btn-info:hover {
+    background-color: #5b86e5;
 }
 
 /* === Animación === */
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(-20px); }
     to { opacity: 1; transform: translateY(0); }
-}
-
-/* === Responsividad === */
-@media (max-width: 768px) {
-    .categoria-card {
-        width: 90%;
-        height: 240px;
-    }
-
-    .categoria-card img {
-        width: 100px;
-        height: 100px;
-    }
 }

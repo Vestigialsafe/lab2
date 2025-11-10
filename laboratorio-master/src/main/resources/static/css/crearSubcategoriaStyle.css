@@ -24,10 +24,10 @@
     backdrop-filter: blur(8px);
     border-radius: 16px;
     padding: 18px 35px;
-    margin-bottom: 50px;
+    margin-bottom: 40px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     width: 100%;
-    max-width: 1100px;
+    max-width: 900px;
     animation: fadeIn 0.8s ease;
 }
 
@@ -41,12 +41,7 @@
     gap: 10px;
 }
 
-.page-header h2::before {
-    content: "📂";
-    font-size: 1.8rem;
-}
-
-.page-header .btn-create {
+.page-header .btn-back {
     background: linear-gradient(135deg, #36d1dc, #5b86e5);
     border: none;
     color: #fff;
@@ -62,81 +57,80 @@
     text-decoration: none;
 }
 
-.page-header .btn-create:hover {
+.page-header .btn-back:hover {
     transform: translateY(-2px);
     background: linear-gradient(135deg, #5b86e5, #36d1dc);
     box-shadow: 0 6px 14px rgba(0,0,0,0.25);
 }
 
-/* === Contenedor de categorías === */
-.categorias-box {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 40px;
+/* === Formulario === */
+.form-container {
     width: 100%;
-    max-width: 1200px;
-}
-
-/* === Tarjeta === */
-.categoria-card {
-    background: rgba(255,255,255,0.9);
+    max-width: 700px;
+    background: rgba(255,255,255,0.93);
     border-radius: 18px;
-    padding: 30px 25px;
-    width: 280px;
-    height: 280px;
-    text-align: center;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    padding: 35px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+    animation: fadeIn 1s ease;
 }
 
-.categoria-card:hover {
-    transform: translateY(-8px) scale(1.03);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+.form-card {
+    background: transparent;
 }
 
-.categoria-card img {
-    width: 130px;
-    height: 130px;
-    object-fit: contain;
-    margin-bottom: 15px;
-    transition: transform 0.3s ease;
-}
-
-.categoria-card:hover img {
-    transform: scale(1.1);
-}
-
-.categoria-card h5 {
-    font-size: 1.1rem;
+.form-label {
+    color: #003366;
     font-weight: 600;
-    color: #1a1a1a;
-    margin: 0;
 }
 
-.categoria-link {
+.form-control,
+.form-select {
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    padding: 10px 12px;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: #5b86e5;
+    box-shadow: 0 0 6px rgba(91, 134, 229, 0.4);
+}
+
+/* === Botones === */
+.btn-submit {
+    background: linear-gradient(135deg, #36d1dc, #5b86e5);
+    color: #fff;
+    font-weight: 600;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 20px;
+    transition: all 0.3s ease;
+}
+
+.btn-submit:hover {
+    background: linear-gradient(135deg, #5b86e5, #36d1dc);
+    transform: translateY(-2px);
+}
+
+.btn-cancel {
+    background: #ddd;
+    color: #333;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 20px;
     text-decoration: none;
-    color: inherit;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-cancel:hover {
+    background: #bbb;
+    transform: translateY(-2px);
 }
 
 /* === Animación === */
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(-20px); }
     to { opacity: 1; transform: translateY(0); }
-}
-
-/* === Responsividad === */
-@media (max-width: 768px) {
-    .categoria-card {
-        width: 90%;
-        height: 240px;
-    }
-
-    .categoria-card img {
-        width: 100px;
-        height: 100px;
-    }
 }

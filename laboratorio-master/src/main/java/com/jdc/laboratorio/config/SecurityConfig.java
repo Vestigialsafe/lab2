@@ -30,7 +30,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         // Páginas públicas
-                        .requestMatchers("/login", "/css/**", "/js/**", "/images/**").permitAll()
+                        .requestMatchers("/login", "/css/**", "/js/**", "/img/**").permitAll()
 
                         // Accesos según rol
                         .requestMatchers("/usuarios/**", "/laboratorios/**").hasRole("SUPERADMIN")

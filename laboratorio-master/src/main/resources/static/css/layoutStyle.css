@@ -24,7 +24,6 @@ body {
     color: #fff;
     display: flex;
     flex-direction: column;
-    height: auto;
     padding: 1.5rem 1rem;
     width: 200px;
 }
@@ -98,7 +97,7 @@ header {
     padding: 0.5rem 1rem;
     background: #022140;
     color: #fff;
-    height: 60px;
+    height: auto;
 }
 
 /* 🔹 Logo al centro */

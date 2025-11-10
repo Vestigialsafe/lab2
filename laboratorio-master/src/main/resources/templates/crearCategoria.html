@@ -4,8 +4,10 @@
   <meta charset="UTF-8">
   <title>Crear Categoría - Laboratorio JDC</title>
   <link rel="stylesheet" th:href="@{/css/layoutStyle.css}">
+  <link rel="stylesheet" th:href="@{/css/crearCategoriaStyle.css}">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
+
 <body>
 <div class="layout">
   <!-- Sidebar -->
@@ -17,27 +19,36 @@
 
     <!-- Contenido principal -->
     <main class="content">
-      <div class="categorias-box">
-        <h2 class="mb-4">Crear Categoría</h2>
+      <div class="crear-categoria-container shadow-lg">
+        <div class="header-form">
+          <h2><i class="bi bi-folder-plus"></i> Crear Categoría</h2>
+        </div>
 
         <form th:action="@{/categorias/guardar}"
               th:object="${categoria}"
               method="post"
               enctype="multipart/form-data"
-              class="shadow p-4 rounded bg-light">
+              class="formulario-categoria">
 
           <div class="mb-3">
-            <label class="form-label">Nombre</label>
-            <input type="text" th:field="*{nombre}" class="form-control" required>
+            <label class="form-label">Nombre de la Categoría</label>
+            <input type="text" th:field="*{nombre}" class="form-control" placeholder="Ej. Equipos de laboratorio" required>
           </div>
+
           <div class="mb-3">
-            <label class="form-label">Imagen</label>
+            <label class="form-label">Imagen Representativa</label>
             <input type="file" name="imagenFile" class="form-control" accept="image/*" required>
+            <small class="text-muted">Formatos permitidos: JPG, PNG, JPEG</small>
           </div>
 
-
-          <button type="submit" class="btn btn-primary">Guardar</button>
-          <a th:href="@{/categorias/vista}" class="btn btn-secondary">Cancelar</a>
+          <div class="botones">
+            <button type="submit" class="btn btn-primary">
+              <i class="bi bi-check-circle"></i> Guardar
+            </button>
+            <a th:href="@{/categorias/vista}" class="btn btn-secondary">
+              <i class="bi bi-arrow-left"></i> Cancelar
+            </a>
+          </div>
         </form>
       </div>
     </main>
@@ -47,13 +58,8 @@
   </div>
 </div>
 
-<!-- CSS interno opcional para centrar y controlar ancho -->
-<style>
-  .categorias-box {
-    max-width: 700px; /* igual que welcome-box */
-    width: 100%;
-    margin: 0 auto; /* centra horizontalmente */
-  }
-</style>
+<!-- Iconos Bootstrap -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+
 </body>
 </html>

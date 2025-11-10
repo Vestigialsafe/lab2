@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <title>Movimientos - Laboratorio JDC</title>
     <link rel="stylesheet" th:href="@{/css/layoutStyle.css}">
+    <link rel="stylesheet" th:href="@{/css/reporteStyle.css}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-
 <body>
 <div class="layout">
     <!-- Sidebar -->
@@ -16,89 +16,89 @@
         <!-- Header -->
         <div th:replace="layout/layout :: header"></div>
 
-        <!-- Contenido principal -->
-        <main class="content">
-            <div class="container mt-4">
+        <main class="content content-container">
 
-                <!-- ✅ Título dinámico -->
-                <h1 class="text-center mb-4"
-                    th:text="${sustancia != null} ? 'Reporte de ' + ${sustancia.nombre} : 'Movimientos registrados'">
-                </h1>
+            <!-- ✅ Mensajes -->
+            <div th:if="${mensaje}" class="alert alert-success alert-dismissible fade show" role="alert">
+                <span th:text="${mensaje}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+            </div>
+            <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                <span th:text="${error}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+            </div>
 
-                <!-- ✅ Botones -->
-                <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+            <!-- Título principal -->
+            <h1 class="page-title"
+                th:text="${sustancia != null} ? 'Reporte de ' + ${sustancia.nombre} : 'Movimientos registrados'">
+            </h1>
+
+            <!-- Barra de botones -->
+            <div class="button-bar">
+                <div>
                     <a th:if="${sustancia != null}"
                        th:href="@{'/movimientos/nuevo/' + ${sustancia.idSustancia}}"
-                       class="btn btn-success">
-                        ➕ Nuevo Reporte
-                    </a>
-
+                       class="btn btn-success">➕ Nuevo Reporte</a>
                     <a th:if="${sustancia == null}"
                        th:href="@{/movimientos/nuevo}"
-                       class="btn btn-primary">
-                        ➕ Nuevo Reporte
-                    </a>
-
+                       class="btn btn-success">➕ Nuevo Reporte</a>
+                </div>
+                <div>
                     <a th:if="${sustancia != null}"
                        th:href="@{'/movimientos/exportar/' + ${sustancia.idSustancia}}"
-                       class="btn btn-outline-success">
-                        📤 Exportar a Excel
-                    </a>
-
+                       class="btn btn-outline-success">📤 Exportar a Excel</a>
                     <a th:href="@{/sustancias/vista}" class="btn btn-secondary">⬅ Volver a Sustancias</a>
                 </div>
-
-                <!-- ✅ Tabla de movimientos -->
-                <div class="table-responsive shadow-sm">
-                    <table class="table table-bordered table-hover align-middle text-center">
-                        <thead class="table-dark">
-                        <tr>
-                            <th>ID</th>
-                            <th>Sustancia</th>
-                            <th>Tipo</th>
-                            <th>Cantidad</th>
-                            <th>Procesos</th>
-                            <th>Stock</th>
-                            <th>Fecha</th>
-                            <th>Descripción</th>
-                            <th>Acciones</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr th:each="movimiento : ${movimientos}">
-                            <td th:text="${movimiento.idMovimiento}"></td>
-                            <td th:text="${movimiento.sustancia != null ? movimiento.sustancia.nombre : 'N/A'}"></td>
-                            <td>
-                                <span th:text="${movimiento.tipoMovimiento}"
-                                      th:classappend="${movimiento.tipoMovimiento.name() == 'ENTRADA'} ? 'text-success fw-bold' : 'text-danger fw-bold'">
-                                </span>
-                            </td>
-                            <td th:text="${movimiento.cantidad}"></td>
-                            <td th:text="${movimiento.procesos != null ? movimiento.procesos : '-'}"></td>
-                            <td th:text="${movimiento.stockPosterior != null ? movimiento.stockPosterior : '-'}"></td>
-                            <td th:text="${#temporals.format(movimiento.fechaMovimiento, 'dd/MM/yyyy')}"></td>
-                            <td th:text="${movimiento.descripcion != null ? movimiento.descripcion : '-'}"></td>
-                            <td>
-                                <a th:href="@{'/movimientos/editar/' + ${movimiento.idMovimiento}}"
-                                   class="btn btn-warning btn-sm">
-                                    ✏️ Editar
-                                </a>
-                            </td>
-
-                        </tr>
-
-                        <tr th:if="${#lists.isEmpty(movimientos)}">
-                            <td colspan="8" class="text-muted text-center">No hay movimientos registrados</td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
             </div>
+
+            <!-- Tabla de movimientos -->
+            <div class="table-container">
+                <table class="table table-bordered table-hover align-middle text-center">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Sustancia</th>
+                        <th>Tipo</th>
+                        <th>Cantidad</th>
+                        <th>Procesos</th>
+                        <th>Stock</th>
+                        <th>Fecha</th>
+                        <th>Descripción</th>
+                        <th>Acciones</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="movimiento : ${movimientos}">
+                        <td th:text="${movimiento.idMovimiento}"></td>
+                        <td th:text="${movimiento.sustancia != null ? movimiento.sustancia.nombre : 'N/A'}"></td>
+                        <td>
+                                <span th:text="${movimiento.tipoMovimiento}"
+                                      th:classappend="${movimiento.tipoMovimiento.name() == 'ENTRADA'} ? 'movement-entrada' : 'movement-salida'">
+                                </span>
+                        </td>
+                        <td th:text="${movimiento.cantidad}"></td>
+                        <td th:text="${movimiento.procesos != null ? movimiento.procesos : '-'}"></td>
+                        <td th:text="${movimiento.stockPosterior != null ? movimiento.stockPosterior : '-'}"></td>
+                        <td th:text="${#temporals.format(movimiento.fechaMovimiento, 'dd/MM/yyyy')}"></td>
+                        <td th:text="${movimiento.descripcion != null ? movimiento.descripcion : '-'}"></td>
+                        <td>
+                            <a th:href="@{'/movimientos/editar/' + ${movimiento.idMovimiento}}" class="btn btn-warning btn-sm">✏️ Editar</a>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(movimientos)}">
+                        <td colspan="9" class="text-muted text-center">No hay movimientos registrados</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
         </main>
 
         <!-- Footer -->
         <div th:replace="layout/layout :: footer"></div>
     </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

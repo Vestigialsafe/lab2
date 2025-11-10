@@ -1,108 +1,141 @@
+/* === Dashboard mejorado === */
+
 body {
-    background-color: #f8f9fc;
-    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(
+            rgba(0, 0, 0, 0.6),
+            rgba(0, 0, 0, 0.6)
+    ),
+    url('../img/imglaboratorio.jpg');
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+
 }
 
-/* ====== TARJETAS PRINCIPALES ====== */
-.card {
-    border: none;
-    border-radius: 0.75rem;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-    transition: all 0.2s ease-in-out;
+.dashboard-container {
+    padding: 2rem 3rem;
+    margin-left: auto;          /* ocupa justo el ancho del sidebar */
+    margin-right: auto;
+    margin-top: 1rem;
+    max-width: 1200px;           /* evita que el contenido se estire demasiado */
+    width: calc(100% - 260px);   /* se adapta al ancho de pantalla */
+    box-sizing: border-box;
 }
 
-.card:hover {
-    transform: translateY(-4px);
-}
 
-.card-body h5 {
-    font-size: 0.95rem;
-    font-weight: 500;
-    margin-bottom: 0.5rem;
-}
 
-.card-body h2 {
-    font-size: 1.6rem;
-    font-weight: 700;
-}
-
-/* ====== TÍTULO PRINCIPAL ====== */
 .dashboard-header {
+    text-align: center;
+    color: #ffffff;
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+    letter-spacing: 1px;
+}
+
+/* === Tarjetas de estadísticas === */
+.stats-cards {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.stat-card {
+    flex: 1 1 220px;
+    border-radius: 15px;
+    padding: 1.5rem;
+    text-align: center;
+    color: #fff;
     font-weight: 600;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    transition: transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+}
+
+.stat-blue { background: linear-gradient(135deg, #1e3c72, #2a5298); }
+.stat-yellow { background: linear-gradient(135deg, #f8b500, #fceabb); color:#222;}
+.stat-red { background: linear-gradient(135deg, #ff416c, #ff4b2b); }
+
+.stat-card h3 {
+    margin: 0;
+    font-size: 1.3rem;
+    color: #fff;
+}
+
+.stat-card .value {
+    font-size: 2.4rem;
+    margin-top: 0.5rem;
+}
+
+/* === Secciones del dashboard === */
+.dashboard-section {
+    background: rgba(255,255,255,0.9);
+    border-radius: 15px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    animation: fadeIn 0.6s ease;
+}
+
+.dashboard-section h4 {
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
     color: #333;
-    font-size: 1.4rem;
-    margin-bottom: 1.5rem;
 }
 
-/* ====== TABLAS ====== */
-.table {
-    font-size: 0.9rem;
-    margin-bottom: 0;
+/* === Tablas === */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
 }
 
-.table thead th {
-    background-color: #f1f3f6;
-    font-weight: 600;
-    border-top: none;
+th, td {
+    padding: 0.75rem;
+    border-bottom: 1px solid #ddd;
 }
 
-.table tbody tr:hover {
-    background-color: #f9fafc;
+th {
+    background: #003366;
+    color: white;
+    border-radius: 10px 10px 0 0;
 }
 
-/* ====== SECCIONES ====== */
-.card-header {
-    font-size: 0.95rem;
-    font-weight: 600;
-    padding: 0.6rem 1rem;
+tr:hover {
+    background-color: #f9f9f9;
 }
 
-.card-body {
-    padding: 0.75rem 1rem;
+/* === Gráfica === */
+.chart-section {
+    background: rgba(255,255,255,0.9);
+    border-radius: 15px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: auto;          /* ✅ se adapta al contenido */
+    max-height: 400px;     /* ✅ límite visual para que no crezca demasiado */
+    overflow: hidden;      /* ✅ evita que sobresalga el canvas */
 }
 
-/* ====== CONTENEDOR DEL GRÁFICO ====== */
-.chart-container {
-    background: #fff;
-    border-radius: 0.75rem;
-    padding: 15px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-    height: 360px;
+/* Control específico del tamaño del gráfico */
+.chart-section canvas {
+    max-width: 600px;
+    max-height: 300px;
 }
 
-.chart-container canvas {
-    height: 250px !important;
-}
 
-/* ====== ESPACIADO GENERAL ====== */
-.row {
-    margin-top: 10px;
-}
-
-/* ====== TARJETAS DE RESUMEN ====== */
-.row.g-4 .card {
-    padding: 0.5rem;
-    border-radius: 0.5rem;
-}
-
-.row.g-4 .card-body h5 {
-    font-size: 0.9rem;
-}
-
-.row.g-4 .card-body h2 {
-    font-size: 1.5rem;
-}
-
-/* ====== RESPONSIVE ====== */
-@media (max-width: 768px) {
-    .card-body h2 {
-        font-size: 1.3rem;
-    }
-    .card-body h5 {
-        font-size: 0.85rem;
-    }
-    .chart-container {
-        padding: 10px;
-        height: 300px;
-    }
+/* === Animaciones === */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
 }

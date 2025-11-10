@@ -1,0 +1,160 @@
+/* ===== GLOBAL ===== */
+body {
+    margin: 0;
+    font-family: "Inter", sans-serif;
+    background: #f0f2f5;
+}
+
+/* ===== LAYOUT ===== */
+.login-wrapper {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+}
+
+/* ===== IMAGEN IZQUIERDA ===== */
+.left-image {
+    flex: 1.2;
+    background: url("../img/Edificio_Crisanto_Luque.png") no-repeat center center;
+    background-size: cover; /* Mantiene cobertura completa */
+    filter: brightness(0.9);
+
+    min-width: 300px;
+
+    /* Mejora suavizado al escalar */
+    image-rendering: auto; /* valores posibles: auto, crisp-edges, pixelated */
+    backface-visibility: hidden; /* mejora renderizado en algunos navegadores */
+    transform: translateZ(0); /* fuerza renderizado en GPU */
+}
+
+
+
+
+/* ===== PANEL DERECHO ===== */
+.right-panel {
+    flex: 1;
+    background: linear-gradient(180deg, #2f6d3f 0%, #0c3c66 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 40px;
+}
+
+/* ===== TARJETA DEL FORMULARIO ===== */
+.panel-content {
+    background: linear-gradient(180deg, #3c8b50 0%, #1b4f70 100%);
+    padding: 45px 50px;
+    border-radius: 18px;
+    width: 85%;
+    max-width: 420px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.28);
+    text-align: center;
+}
+
+/* ===== LOGO ===== */
+.logo {
+    width: 400px;
+    margin-bottom: 10px; /* un poco más de espacio debajo */
+}
+
+
+/* ===== TÍTULO ===== */
+.title {
+    color: white;
+    font-size: 1.9rem;
+    font-weight: 400;
+    margin-bottom: 35px;
+    line-height: 1.3;
+}
+
+/* ===== INPUTS ===== */
+.input-group {
+    align-content: center;
+    position: relative;
+    margin-bottom: 18px;
+}
+
+.input-group input {
+    width: 340px;
+    padding: 13px 40px;
+    border-radius: 10px;
+    border: none;
+    outline: none;
+    font-size: 0.95rem;
+    color: #333;
+    background: #ffffff;
+    box-shadow: 0 0 6px rgba(0,0,0,0.08);
+}
+
+/* Iconos SVG */
+.icon {
+    position: absolute;
+    top: 50%;
+    left: 12px;
+    width: 19px;
+    height: 19px;
+    transform: translateY(-50%);
+    opacity: 0.7;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+.icon.user {
+    background-image: url("data:image/svg+xml,%3Csvg fill='%23666' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 12c2.7 0 5-2.3 5-5s-2.3-5-5-5-5 2.3-5 5 2.3 5 5 5zm0 2c-3.3 0-10 1.7-10 5v3h20v-3c0-3.3-6.7-5-10-5z'/%3E%3C/svg%3E");
+}
+
+.icon.lock {
+    background-image: url("data:image/svg+xml,%3Csvg fill='%23666' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M17 8h-1V6c0-2.8-2.2-5-5-5S6 3.2 6 6v2H5c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM8 6c0-1.7 1.3-3 3-3s3 1.3 3 3v2H8V6zm9 16H5V10h12v12z'/%3E%3C/svg%3E");
+}
+
+/* ===== RECUÉRDAME ===== */
+.remember {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: white;
+    margin-top: 5px;
+    margin-bottom: 25px;
+    font-size: 0.9rem;
+}
+
+/* ===== BOTÓN ===== */
+.btn-login {
+    width: 100%;
+    background: #2f7b2c;
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+    color: white;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.btn-login:hover {
+    background: #3fa63c;
+    transform: translateY(-2px);
+}
+
+/* ===== MENSAJES ===== */
+.error {
+    color: #ffb3b3;
+    margin-top: 12px;
+}
+
+.logout {
+    color: #b4ffb4;
+    margin-top: 12px;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 1050px) {
+    .left-image {
+        display: none;
+    }
+    .panel-content {
+        width: 90%;
+    }
+}

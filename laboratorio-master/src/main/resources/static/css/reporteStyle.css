@@ -1,0 +1,195 @@
+.main-section{
+    background: linear-gradient(
+            rgba(0, 0, 0, 0.6),
+            rgba(0, 0, 0, 0.6)
+    ),
+    url('../img/imglaboratorio.jpg');
+}
+/* === CONTENEDOR PRINCIPAL === */
+.content-container {
+    max-width: 2150px;
+    width: 1000px;
+    margin: 50px auto;
+    padding: 30px;
+    border-radius: 16px;
+    background: #f7f9fb;
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e5e9f0;
+}
+
+/* === TÍTULO PRINCIPAL === */
+.page-title {
+    font-size: 2rem;
+    font-weight: 700;
+    text-align: center;
+    color: #003366;
+    margin-bottom: 30px;
+    position: relative;
+    letter-spacing: 0.5px;
+}
+
+.page-title::after {
+    content: "";
+    display: block;
+    width: 100px;
+    height: 4px;
+    background: linear-gradient(90deg, #36d1dc, #5b86e5);
+    margin: 10px auto 0;
+    border-radius: 3px;
+}
+
+/* === BARRA DE BOTONES === */
+.button-bar {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 30px;
+}
+
+.button-bar .btn {
+    font-weight: 600;
+    border-radius: 10px;
+    padding: 10px 20px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    font-size: 0.95rem;
+}
+
+/* === Botones personalizados === */
+.btn-success {
+    background: linear-gradient(135deg, #36d1dc, #5b86e5);
+    color: #fff;
+    border: none;
+    box-shadow: 0 3px 10px rgba(91, 134, 229, 0.3);
+}
+
+.btn-success:hover {
+    transform: translateY(-2px);
+    background: linear-gradient(135deg, #5b86e5, #36d1dc);
+    box-shadow: 0 5px 15px rgba(91, 134, 229, 0.4);
+}
+
+.btn-outline-success {
+    color: #005b96;
+    border: 2px solid #5b86e5;
+    background: transparent;
+}
+
+.btn-outline-success:hover {
+    background: #5b86e5;
+    color: #fff;
+    transform: translateY(-2px);
+}
+
+.btn-secondary {
+    background: #6c757d;
+    color: #fff;
+    border: none;
+}
+
+.btn-secondary:hover {
+    background: #5a6268;
+    transform: translateY(-2px);
+}
+
+/* === TABLA ESTILIZADA === */
+.table-container {
+    width: auto;
+    overflow-x: auto;
+    border-radius: 14px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+    background: #fff;
+    border: 1px solid #e0e0e0;
+}
+
+table.table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: 0.95rem;
+}
+
+/* Encabezado */
+table.table thead th {
+    background: linear-gradient(90deg, #003366, #004080);
+    color: #fff;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 0.6px;
+    padding: 14px 12px;
+    border: none;
+}
+
+/* Bordes redondeados en el header */
+table.table thead th:first-child {
+    border-top-left-radius: 10px;
+}
+table.table thead th:last-child {
+    border-top-right-radius: 10px;
+}
+
+/* Filas */
+table.table tbody td {
+    padding: 12px 10px;
+    vertical-align: middle;
+    color: #333;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+/* Hover */
+table.table tbody tr:hover {
+    background: rgba(91, 134, 229, 0.08);
+    transition: background 0.3s ease;
+}
+
+/* Fila vacía */
+table.table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* === TIPOS DE MOVIMIENTO === */
+.movement-entrada {
+    color: #198754;
+    font-weight: 700;
+}
+
+.movement-salida {
+    color: #dc3545;
+    font-weight: 700;
+}
+
+/* === MENSAJES DE ALERTA === */
+.alert {
+    max-width: 750px;
+    margin: 25px auto;
+    border-radius: 12px;
+    font-weight: 500;
+}
+
+/* === BOTONES DE ACCIÓN === */
+.btn-sm {
+    padding: 6px 10px;
+    font-size: 0.85rem;
+    border-radius: 6px;
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 992px) {
+    .button-bar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .page-title {
+        font-size: 1.6rem;
+    }
+
+    table.table {
+        font-size: 0.9rem;
+    }
+}

@@ -1,28 +1,18 @@
-/* === Layout general === */
-body, html {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    font-family: 'Mulish', sans-serif;
-}
-
-
-/* Main Section */
+/* === Sección principal === */
 .main-section {
     flex: 1;
     display: flex;
     flex-direction: column;
 }
 
-/* Content */
+/* === Contenido centrado con fondo === */
 .content {
-    flex: 1;
+    position: relative;
+    min-height: calc(100vh - 80px); /* evita que choque con el header */
     display: flex;
-    justify-content: center; /* centro horizontal */
-    align-items: center;     /* centro vertical */
-    padding: 20px;
-
-    /* Fondo difuminado */
+    justify-content: center; /* centra horizontalmente */
+    align-items: center;     /* centra verticalmente */
+    padding: 40px;
     background: linear-gradient(
             rgba(0, 0, 0, 0.6),
             rgba(0, 0, 0, 0.6)
@@ -33,28 +23,48 @@ body, html {
     background-repeat: no-repeat;
 }
 
-/* Box principal */
+/* === Caja del formulario === */
 .box {
-    background: rgba(255, 255, 255, 0.92); /* semi-transparente */
-    padding: 30px;
+    background: rgba(255, 255, 255, 0.92);
+    padding: 30px 40px;
     border-radius: 15px;
     width: 100%;
     max-width: 700px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+    backdrop-filter: blur(6px);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation: fadeIn 0.6s ease;
 }
 
-/* Título */
+/* === Título === */
 .box h1 {
     text-align: center;
     margin-bottom: 25px;
     color: black;
+    font-size: 1.8rem;
+    font-weight: 700;
 }
 
-/* Formularios */
-.form-control, .form-select {
+/* === Formularios === */
+.form-control,
+.form-select {
     border-radius: 8px;
     padding: 10px;
+    border: 1px solid #ccc;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
 }
+
+.form-control:focus,
+.form-select:focus {
+    border-color: #5b86e5;
+    box-shadow: 0 0 6px rgba(91, 134, 229, 0.4);
+    outline: none;
+}
+
 .form-label {
     font-size: 15px;
     font-weight: 600;
@@ -63,17 +73,14 @@ body, html {
     display: block;
 }
 
+/* === Botones === */
 .form-actions {
     display: flex;
     justify-content: flex-end;
     gap: 10px;
-    margin-top: 20px;
+    margin-top: 25px;
 }
 
-
-
-
-/* Botones generales */
 .btn {
     padding: 0.6rem 1.5rem;
     font-weight: 600;
@@ -81,12 +88,12 @@ body, html {
     cursor: pointer;
     text-decoration: none;
     transition: all 0.3s ease;
-    box-shadow: 0 3px 6px rgba(0,0,0,0.16); /* sombra ligera */
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16);
 }
 
-/* Botón principal: Guardar */
+/* Botón principal */
 .btn-primary {
-    background: linear-gradient(135deg, #36d1dc, #5b86e5); /* degradado */
+    background: linear-gradient(135deg, #36d1dc, #5b86e5);
     color: white;
     border: none;
 }
@@ -97,7 +104,7 @@ body, html {
     background: linear-gradient(135deg, #5b86e5, #36d1dc);
 }
 
-/* Botón secundario: Cancelar */
+/* Botón secundario */
 .btn-secondary {
     background: #f0f0f0;
     color: #333;
@@ -109,4 +116,10 @@ body, html {
     color: #000;
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+/* === Animación de entrada === */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translate(-50%, -60%); }
+    to { opacity: 1; transform: translate(-50%, -50%); }
 }

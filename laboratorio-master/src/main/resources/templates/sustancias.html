@@ -48,7 +48,9 @@
             <!-- Frasco -->
             <div class="frasco" data-bs-toggle="modal"
                  th:attr="data-bs-target='#modal-' + ${sus.idSustancia}">
+              <div class="liquido"></div> <!-- contenido del frasco -->
             </div>
+
             <p class="nombre-sustancia" th:text="${sus.nombre}"></p>
 
             <!-- Modal de detalle -->
