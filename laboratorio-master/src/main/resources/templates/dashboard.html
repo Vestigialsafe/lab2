@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Panel de Control - Laboratorio</title>
 
-  <!-- ✅ Mantienes tus estilos -->
+  <!-- ✅ Estilos -->
   <link rel="stylesheet" th:href="@{/css/layoutStyle.css}">
   <link rel="stylesheet" th:href="@{/css/dashboardStyle.css}">
 
@@ -35,11 +35,11 @@
         </div>
         <div class="stat-card stat-yellow">
           <h3>Próximas a Vencer</h3>
-          <div class="value" th:text="${sustanciasProximas}">0</div>
+          <div class="value" th:text="${proximasAVencer}">0</div>
         </div>
         <div class="stat-card stat-red">
           <h3>Agotadas</h3>
-          <div class="value" th:text="${sustanciasAgotadas}">0</div>
+          <div class="value" th:text="${agotadas}">0</div>
         </div>
       </div>
 
@@ -57,15 +57,39 @@
           </tr>
           </thead>
           <tbody>
-          <tr th:if="${#lists.isEmpty(sustanciasProximasList)}">
+          <tr th:if="${#lists.isEmpty(listaProximas)}">
             <td colspan="5">✅ No hay sustancias próximas a vencer o vencidas.</td>
           </tr>
-          <tr th:each="s, iter : ${sustanciasProximasList}">
+
+          <tr th:each="s, iter : ${listaProximas}">
             <td th:text="${iter.index + 1}"></td>
             <td th:text="${s.nombre}"></td>
-            <td th:text="${s.fechaVencimiento}"></td>
-            <td th:text="${s.estado}"></td>
-            <td><button class="btn btn-warning btn-sm">Ver</button></td>
+            <td th:text="${#temporals.format(s.fechaVencimiento, 'dd/MM/yyyy')}"></td>
+
+            <!-- 🔹 Estado dinámico -->
+            <td>
+              <span th:if="${s.fechaVencimiento.isBefore(T(java.time.LocalDate).now())}"
+                    style="color:red; font-weight:bold;">
+                VENCIDA
+              </span>
+              <span th:if="${s.fechaVencimiento.isEqual(T(java.time.LocalDate).now())}"
+                    style="color:orange; font-weight:bold;">
+                VENCE HOY
+              </span>
+              <span th:if="${s.fechaVencimiento.isAfter(T(java.time.LocalDate).now())}"
+                    th:text="|${T(java.time.temporal.ChronoUnit).DAYS.between(T(java.time.LocalDate).now(), s.fechaVencimiento)} días restantes|"
+                    style="color:green; font-weight:bold;">
+              </span>
+            </td>
+
+            <!-- 🔸 Botón eliminar con confirmación -->
+            <td>
+              <form th:action="@{'/dashboard/eliminarDashboard/' + ${s.idSustancia}}"
+                    method="post"
+                    th:attr="onsubmit=|return confirmarEliminacion('${s.nombre}')|">
+                <button class="btn btn-danger btn-sm">Eliminar</button>
+              </form>
+            </td>
           </tr>
           </tbody>
         </table>
@@ -83,10 +107,10 @@
           </tr>
           </thead>
           <tbody>
-          <tr th:if="${#lists.isEmpty(sustanciasAgotadasList)}">
+          <tr th:if="${#lists.isEmpty(listaAgotadas)}">
             <td colspan="3">🟢 No hay sustancias agotadas.</td>
           </tr>
-          <tr th:each="s, iter : ${sustanciasAgotadasList}">
+          <tr th:each="s, iter : ${listaAgotadas}">
             <td th:text="${iter.index + 1}"></td>
             <td th:text="${s.nombre}"></td>
             <td th:text="${s.stock}"></td>
@@ -110,13 +134,18 @@
 <!-- 📈 Script del gráfico -->
 <script th:inline="javascript">
   const ctx = document.getElementById('chartCategorias');
-  const chart = new Chart(ctx, {
+
+  // ✅ Variables enviadas desde el controlador
+  const categorias = /*[[${categorias}]]*/ [];
+  const valores = /*[[${cantidades}]]*/ [];
+
+  new Chart(ctx, {
     type: 'doughnut',
     data: {
-      labels: [[${categoriasLabels}]],
+      labels: categorias,
       datasets: [{
         label: 'Sustancias por Categoría',
-        data: [[${categoriasValores}]],
+        data: valores,
         borderWidth: 1,
         backgroundColor: [
           'rgba(54, 162, 235, 0.7)',
@@ -131,11 +160,17 @@
     },
     options: {
       responsive: true,
-      plugins: {
-        legend: { position: 'bottom' },
-      }
+      plugins: { legend: { position: 'bottom' } }
     }
   });
 </script>
+
+<!-- ⚠️ Confirmación de eliminación -->
+<script>
+  function confirmarEliminacion(nombre) {
+    return confirm(`⚠️ ¿Estás seguro de que deseas eliminar la sustancia "${nombre}"?`);
+  }
+</script>
+
 </body>
 </html>
