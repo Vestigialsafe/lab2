@@ -1,0 +1,174 @@
+/* =======================================
+   Variables de Diseño Global
+   ======================================= */
+:root {
+    /* Colores */
+    --primary-blue: #e0e5ef;
+    --success-green: #198754;
+    --success-dark-green: #157347;
+    --secondary-gray: #6c757d;
+    --secondary-dark-gray: #5c636a;
+    --input-border: #ced4da;
+    --dark-text: #212529;
+    --medium-text: #495057;
+    --light-text: #ffffff;
+    --background-white: #ffffff;
+
+    /* Sombras */
+    --shadow-medium: 0 8px 25px rgba(0, 0, 0, 0.2); /* Sombra fuerte para destacar */
+    --shadow-hover: 0 12px 35px rgba(0, 0, 0, 0.3);
+    --shadow-focus: 0 0 0 0.25rem rgba(13, 110, 253, .25);
+
+    /* Radios de borde */
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 18px;
+
+    /* Espaciados */
+    --spacing-xs: 0.5rem;
+    --spacing-sm: 0.8rem;
+    --spacing-md: 1.2rem;
+    --spacing-lg: 1.8rem;
+    --spacing-xl: 2.5rem;
+
+    /* Transiciones */
+    --transition-ease: all 0.25s ease-in-out;
+}
+
+/* =======================================
+   Ajustes al Contenido Principal
+   ======================================= */
+
+/* ⚠️ Importante: NO se toca el body ni el main-section, solo el contenido. */
+
+.content {
+    /* Asegura que el contenido pueda centrar sus elementos internos */
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centra los elementos horizontalmente */
+    /* Ajusta el padding para que no se pegue al header y footer */
+    padding: var(--spacing-lg) var(--spacing-xl);
+}
+
+/* ---------------------------------------
+   Título de la Página (Caja Flotante)
+   --------------------------------------- */
+/* Se reintroduce el estilo de caja azul que se ve bien sobre el fondo */
+.content h2 {
+    /* Estilos de la caja */
+    background: var(--primary-blue);
+    color: var(--light-text);
+    padding: 1rem 3rem; /* Más padding horizontal para que se vea sustancial */
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-medium);
+    font-size: 1.6rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: var(--spacing-xl) !important;
+    display: flex; /* Para centrar texto e icono */
+    align-items: center;
+    gap: var(--spacing-sm);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4); /* Sombra para resaltar sobre el fondo */
+
+    /* Se elimina text-primary y text-center de Bootstrap para evitar conflictos */
+}
+
+
+/* ---------------------------------------
+   Tarjeta del Formulario (.card)
+   --------------------------------------- */
+.card {
+    border-radius: var(--radius-lg);
+    border: none !important;
+    background: var(--background-white);
+    box-shadow: var(--shadow-medium);
+    transition: var(--transition-ease);
+    padding: var(--spacing-xl); /* Más espacio interno para respirar */
+    max-width: 420px; /* Un ancho más compacto y enfocado */
+    width: 100%;
+
+    /* El centrado ya lo hace .content (align-items: center) */
+}
+
+.card:hover {
+    transform: translateY(-4px); /* Levantamiento más dramático */
+    box-shadow: var(--shadow-hover);
+}
+
+/* ---------------------------------------
+   Campos del Formulario
+   --------------------------------------- */
+.form-label {
+    font-weight: 600 !important;
+    color: var(--medium-text);
+    margin-bottom: var(--spacing-xs);
+    font-size: 0.95rem;
+}
+
+/* Énfasis en la etiqueta que requiere acción (Nueva Fecha) */
+.form-label[for="fechaVencimiento"] {
+    color: var(--dark-text) !important; /* Texto oscuro para resaltar */
+    border-left: 4px solid var(--primary-blue); /* Línea de acento */
+    padding-left: var(--spacing-sm);
+    font-weight: 700 !important;
+}
+
+.form-control {
+    border-radius: var(--radius-sm);
+    padding: var(--spacing-sm) var(--spacing-md);
+    border: 1px solid var(--input-border);
+    transition: var(--transition-ease);
+    font-size: 1rem;
+    color: var(--dark-text);
+}
+
+.form-control:focus {
+    border-color: var(--primary-blue);
+    box-shadow: var(--shadow-focus);
+    outline: none;
+}
+
+/* Campos de solo lectura */
+.form-control[readonly] {
+    background-color: #f1f3f5;
+    cursor: default;
+    font-style: italic;
+    color: var(--medium-text);
+}
+
+/* ---------------------------------------
+   Botones
+   --------------------------------------- */
+/* d-flex y justify-content-between están en el HTML */
+.d-flex.justify-content-between.mt-4 {
+    margin-top: var(--spacing-lg) !important; /* Ajustar el espaciado sobre los botones */
+    padding-top: var(--spacing-md); /* Pequeño padding interno */
+    border-top: 1px dashed #e9ecef; /* Separador sutil */
+}
+
+.btn {
+    font-weight: 600;
+    border-radius: var(--radius-sm);
+    padding: var(--spacing-sm) var(--spacing-lg);
+    transition: var(--transition-ease);
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    min-width: 120px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* Sombra base sutil */
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Sombra más fuerte al hacer hover */
+}
+
+.btn-secondary {
+    background: var(--secondary-gray);
+    color: var(--light-text);
+}
+
+.btn-success {
+    background: var(--success-green);
+    color: var(--light-text);
+}
