@@ -70,13 +70,11 @@
 
 /* === Contenedor de categorías === */
 .categorias-box {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 40px;
     width: 100%;
-    max-width: 1200px;
+    max-width: 1100px;
+    margin: 0 auto;
 }
+
 
 /* === Tarjeta === */
 .categoria-card {
