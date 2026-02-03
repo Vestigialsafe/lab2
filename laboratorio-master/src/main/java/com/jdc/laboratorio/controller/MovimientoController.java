@@ -114,7 +114,7 @@ public class MovimientoController {
     public void exportarMovimientosAExcel(@PathVariable("idSustancia") Long idSustancia,
                                           HttpServletResponse response) throws IOException {
 
-        response.setContentType("application/octet-stream");
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         String nombreArchivo = "reporte_movimientos_sustancia_" + idSustancia + ".xlsx";
         response.setHeader("Content-Disposition", "attachment; filename=" + nombreArchivo);
 
