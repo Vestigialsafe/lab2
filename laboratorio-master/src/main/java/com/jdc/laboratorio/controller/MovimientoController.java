@@ -28,14 +28,12 @@ public class MovimientoController {
         this.sustanciaRepository = sustanciaRepository;
     }
 
-    // 📋 Vista general de todos los movimientos
     @GetMapping("/vista")
     public String listar(Model model) {
         model.addAttribute("movimientos", movimientoService.listarMovimientos());
         return "movimiento";
     }
 
-    // 🧾 Formulario de nuevo movimiento (general)
     @GetMapping("/nuevo")
     public String nuevo(Model model) {
         model.addAttribute("movimiento", new Movimiento());
@@ -44,9 +42,8 @@ public class MovimientoController {
         return "crearMovimiento";
     }
 
-    // 🧾 Nuevo movimiento para una sustancia específica
     @GetMapping("/nuevo/{idSustancia}")
-    public String nuevoMovimientoPorSustancia(@PathVariable("idSustancia") Long idSustancia, Model model) {
+    public String nuevoMovimientoPorSustancia(@PathVariable Long idSustancia, Model model) {
         Sustancia sustancia = sustanciaRepository.findById(idSustancia)
                 .orElseThrow(() -> new IllegalArgumentException("Sustancia no encontrada"));
 
@@ -59,7 +56,6 @@ public class MovimientoController {
         return "crearMovimiento";
     }
 
-    // 💾 Guardar movimiento nuevo
     @PostMapping("/guardar")
     public String guardar(@ModelAttribute Movimiento movimiento) {
         movimientoService.registrarMovimiento(movimiento);
@@ -73,9 +69,8 @@ public class MovimientoController {
                 : "redirect:/movimientos/vista";
     }
 
-    // ✏️ Editar movimiento
     @GetMapping("/editar/{idMovimiento}")
-    public String editarMovimiento(@PathVariable("idMovimiento") Long idMovimiento, Model model) {
+    public String editarMovimiento(@PathVariable Long idMovimiento, Model model) {
         Movimiento movimiento = movimientoService.obtenerPorId(idMovimiento)
                 .orElseThrow(() -> new IllegalArgumentException("Movimiento no encontrado"));
 
@@ -85,7 +80,6 @@ public class MovimientoController {
         return "editarMovimiento";
     }
 
-    // 💾 Actualizar movimiento existente (y stock)
     @PostMapping("/actualizar")
     public String actualizarMovimiento(@ModelAttribute Movimiento movimiento) {
         movimientoService.actualizarMovimiento(movimiento);
@@ -99,31 +93,46 @@ public class MovimientoController {
                 : "redirect:/movimientos/vista";
     }
 
-    // 🔍 Ver movimientos de una sustancia específica
     @GetMapping("/sustancia/{idSustancia}")
-    public String listarPorSustancia(@PathVariable("idSustancia") Long idSustancia, Model model) {
+    public String listarPorSustancia(@PathVariable Long idSustancia, Model model) {
         Sustancia sustancia = sustanciaRepository.findById(idSustancia)
                 .orElseThrow(() -> new IllegalArgumentException("Sustancia no encontrada"));
+
         model.addAttribute("sustancia", sustancia);
         model.addAttribute("movimientos", movimientoService.listarPorSustancia(idSustancia));
         return "movimiento";
     }
 
-    // 📤 Exportar movimientos a Excel
+    // 📤 Exportar movimientos a Excel (CORREGIDO)
     @GetMapping("/exportar/{idSustancia}")
-    public void exportarMovimientosAExcel(@PathVariable("idSustancia") Long idSustancia,
-                                          HttpServletResponse response) throws IOException {
+    public void exportarMovimientosAExcel(
+            @PathVariable Long idSustancia,
+            HttpServletResponse response) throws IOException {
 
-        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-        String nombreArchivo = "reporte_movimientos_sustancia_" + idSustancia + ".xlsx";
-        response.setHeader("Content-Disposition", "attachment; filename=" + nombreArchivo);
+        response.setContentType(
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        );
+        response.setHeader(
+                "Content-Disposition",
+                "attachment; filename=reporte_movimientos_sustancia_" + idSustancia + ".xlsx"
+        );
 
         Sustancia sustancia = sustanciaRepository.findById(idSustancia)
                 .orElseThrow(() -> new IllegalArgumentException("Sustancia no encontrada"));
-        List<Movimiento> movimientos = movimientoService.listarPorSustancia(idSustancia);
+
+        List<Movimiento> movimientos =
+                movimientoService.listarPorSustancia(idSustancia);
 
         try (Workbook workbook = new XSSFWorkbook()) {
             Sheet sheet = workbook.createSheet("Movimientos");
+
+            // Anchos de columna (seguro para Render)
+            sheet.setColumnWidth(0, 20 * 256);
+            sheet.setColumnWidth(1, 15 * 256);
+            sheet.setColumnWidth(2, 12 * 256);
+            sheet.setColumnWidth(3, 12 * 256);
+            sheet.setColumnWidth(4, 12 * 256);
+            sheet.setColumnWidth(5, 30 * 256);
 
             Row titulo = sheet.createRow(0);
             Cell cellTitulo = titulo.createCell(0);
@@ -135,10 +144,15 @@ public class MovimientoController {
             tituloFont.setFontHeightInPoints((short) 14);
             tituloStyle.setFont(tituloFont);
             cellTitulo.setCellStyle(tituloStyle);
-            sheet.addMergedRegion(new org.apache.poi.ss.util.CellRangeAddress(0, 0, 0, 5));
+            sheet.addMergedRegion(
+                    new org.apache.poi.ss.util.CellRangeAddress(0, 0, 0, 5)
+            );
 
             Row header = sheet.createRow(2);
-            String[] columnas = {"Fecha", "Tipo", "Cantidad", "Stock", "Procesos", "Descripción"};
+            String[] columnas = {
+                    "Fecha", "Tipo", "Cantidad", "Stock", "Procesos", "Descripción"
+            };
+
             CellStyle headerStyle = workbook.createCellStyle();
             Font headerFont = workbook.createFont();
             headerFont.setBold(true);
@@ -153,17 +167,36 @@ public class MovimientoController {
             int fila = 3;
             for (Movimiento m : movimientos) {
                 Row dataRow = sheet.createRow(fila++);
-                dataRow.createCell(0).setCellValue(m.getFechaMovimiento() != null ? m.getFechaMovimiento().toString() : "-");
-                dataRow.createCell(1).setCellValue(m.getTipoMovimiento() != null ? m.getTipoMovimiento().name() : "-");
+                dataRow.createCell(0).setCellValue(
+                        m.getFechaMovimiento() != null
+                                ? m.getFechaMovimiento().toString()
+                                : "-"
+                );
+                dataRow.createCell(1).setCellValue(
+                        m.getTipoMovimiento() != null
+                                ? m.getTipoMovimiento().name()
+                                : "-"
+                );
                 dataRow.createCell(2).setCellValue(m.getCantidad());
-                dataRow.createCell(3).setCellValue(m.getStockPosterior() != null ? m.getStockPosterior() : 0);
-                dataRow.createCell(4).setCellValue(m.getProcesos() != null ? m.getProcesos() : 0);
-                dataRow.createCell(5).setCellValue(m.getDescripcion() != null ? m.getDescripcion() : "-");
+                dataRow.createCell(3).setCellValue(
+                        m.getStockPosterior() != null
+                                ? m.getStockPosterior()
+                                : 0
+                );
+                dataRow.createCell(4).setCellValue(
+                        m.getProcesos() != null
+                                ? m.getProcesos()
+                                : 0
+                );
+                dataRow.createCell(5).setCellValue(
+                        m.getDescripcion() != null
+                                ? m.getDescripcion()
+                                : "-"
+                );
             }
 
-            for (int i = 0; i < columnas.length; i++) sheet.autoSizeColumn(i);
-
             workbook.write(response.getOutputStream());
+            response.flushBuffer();
         }
     }
 }
